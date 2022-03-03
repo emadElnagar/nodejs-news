@@ -7,3 +7,41 @@ a, a:hover {
   color: #00B7FF;
   text-decoration: none;
 }
+
+form.auth-form {
+  max-width: 500px;
+}
+
+form textarea {
+  height: 200px;
+  resize: none;
+}
+
+form input {
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #aaa;
+}
+
+form input:focus {
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #000;
+}
+
+form textarea {
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #aaa;
+}
+
+form textarea:focus {
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #000;
+}
+
+form input:required + label::after,
+form textarea:required + label::after {
+  content: ' *';
+}
