@@ -5,12 +5,29 @@
   "scripts": {
     "start": "nodemon ./bin/www"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emadElnagar/nodejs-news"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "mongoose",
+    "nodejs",
+    "nodejs news"
+  ],
+  "author": "Emad Elnagar",
+  "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-handlebars": "^6.0.3",
+    "express-validator": "^6.14.0",
     "hbs": "~4.0.4",
     "http-errors": "~1.6.3",
+    "mongoose": "^6.2.4",
     "morgan": "~1.9.1"
   },
   "devDependencies": {
