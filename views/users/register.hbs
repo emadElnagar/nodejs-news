@@ -5,11 +5,6 @@
       <h1 class="text-capitalize text-center mb-4">sign up</h1>
       
       <div class="field d-flex flex-column-reverse mt-2">
-        <input type="email" name="email" class="w-100" required>
-        <label for="email">email</label>
-      </div>
-      
-      <div class="field d-flex flex-column-reverse mt-2">
         <input type="text" name="firstName" class="w-100" required>
         <label for="firstName">first name</label>
       </div>
@@ -17,6 +12,11 @@
       <div class="field d-flex flex-column-reverse mt-2">
         <input type="text" name="lastName" class="w-100" required>
         <label for="lastName">last name</label>
+      </div>
+
+      <div class="field d-flex flex-column-reverse mt-2">
+        <input type="email" name="email" class="w-100" required>
+        <label for="email">email</label>
       </div>
 
       <div class="field d-flex flex-column-reverse mt-2">
@@ -54,5 +54,12 @@
       </div>
 
     </form>
+    {{#each messages}}
+      <div class="d-flex justify-content-center">
+        <div class="alert alert-danger text-center mt-3 form-alert" role="alert">
+          {{this}}
+        </div>
+      </div>
+    {{/each}}
   </div>
 </section>

@@ -45,3 +45,7 @@ form input:required + label::after,
 form textarea:required + label::after {
   content: ' *';
 }
+
+.form-alert {
+  width: 500px;
+}

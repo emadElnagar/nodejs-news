@@ -21,5 +21,12 @@
       </div>
 
     </form>
+    {{#each messages}}
+      <div class="d-flex justify-content-center">
+        <div class="alert alert-danger text-center mt-3 form-alert" role="alert">
+          {{this}}
+        </div>
+      </div>
+    {{/each}}
   </div>
 </section>
