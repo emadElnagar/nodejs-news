@@ -82,7 +82,7 @@ router.post('/register', [
         loggedin.user.lastName = user.lastName;
         loggedin.user.gender = user.gender;
         loggedin.user.isAdmin = user.isAdmin;
-        res.redirect('/')
+        res.redirect('/');
       });
     }
   });
@@ -95,5 +95,39 @@ router.get('/login', (req, res, next) => {
   }
   res.render('users/login', { title: 'Noticias-login', messages: errorMessage });
 });
+
+router.post('/login', async (req, res, next)=> {
+  const user = await User.findOne({ email: req.body.email });
+  const loginError = "wrong email or password";
+  if(!user) {
+    req.flash('loginError', loginError);
+    res.redirect('login');
+    return;
+  }
+  const validate = await bcrypt.compare(req.body.password, user.password);
+  if (!validate) {
+    req.flash('loginError', loginError);
+    res.redirect('login');
+    return;
+  }
+  loggedin = req.session;
+  loggedin.user = {};
+  loggedin.user.email = req.body.email;
+  loggedin.user._id = user._id;
+  loggedin.user.firstName = user.firstName;
+  loggedin.user.lastName = user.lastName;
+  loggedin.user.gender = user.gender;
+  loggedin.user.isAdmin = user.isAdmin;
+  res.redirect('/');
+});
+
+router.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return console.log(err);
+    }
+    res.redirect('/');
+  })
+})
 
 module.exports = router;
