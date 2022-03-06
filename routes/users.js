@@ -4,6 +4,7 @@ var router = express.Router();
 const { check, validationResult } = require('express-validator');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
+const async = require('hbs/lib/async');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -129,5 +130,40 @@ router.get('/logout', (req, res) => {
     res.redirect('/');
   })
 })
+
+router.get('/profile/:id', async(req, res, next) => {
+  const userId = req.params.id;
+  const profile = await User.findById(userId);
+  context =  {
+    title: 'Noticias-profile',
+    user: req.session.user,
+  }
+  if (!profile) {
+    res.render('404', context);
+    return;
+  }
+  res.render('users/profile', {
+    title: 'Noticias-profile',
+    user: req.session.user,
+    profile: {
+      id: profile._id,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      gender: profile.gender,
+      isAdmin: profile.isAdmin
+    },
+    check: function() {
+      if (req.session.user) {
+        if (req.session.user._id === req.params.id) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+  });
+});
 
 module.exports = router;

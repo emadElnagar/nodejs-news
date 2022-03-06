@@ -49,3 +49,15 @@ form textarea:required + label::after {
 .form-alert {
   width: 500px;
 }
+
+.not-found h1 {
+  font-size: 10rem;
+}
+
+.not-found p {
+  font-size: 3rem;
+}
+
+.not-found a {
+  font-size: 1.2rem;
+}
