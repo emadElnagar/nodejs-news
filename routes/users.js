@@ -152,13 +152,9 @@ router.get('/profile/:id', async(req, res, next) => {
       gender: profile.gender,
       isAdmin: profile.isAdmin
     },
-    check: function() {
+    check: function () {
       if (req.session.user) {
-        if (req.session.user._id === req.params.id) {
-          return true;
-        } else {
-          return false;
-        }
+        return req.session.user._id === req.params.id;
       } else {
         return false;
       }
