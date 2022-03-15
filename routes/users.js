@@ -1,10 +1,23 @@
 var express = require('express');
 var router = express.Router();
-
 const { check, validationResult } = require('express-validator');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const async = require('hbs/lib/async');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination:  function(req, file, cb) {
+    cb(null, './public/media/profile')
+  },
+  filename: function(req, file, cb) {
+    cb(null, new Date().toDateString() + file.originalname)
+  }
+});
+
+const upload = multer({ storage: storage });
+
+router.use(upload.single('image'));
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -134,12 +147,8 @@ router.get('/logout', (req, res) => {
 router.get('/profile/:id', async(req, res, next) => {
   const userId = req.params.id;
   const profile = await User.findById(userId);
-  context =  {
-    title: 'Noticias-profile',
-    user: req.session.user,
-  }
   if (!profile) {
-    res.render('404', context);
+    res.render('404', { title: 'Noticias-profile', user: req.session.user });
     return;
   }
   res.render('users/profile', {
@@ -150,6 +159,7 @@ router.get('/profile/:id', async(req, res, next) => {
       firstName: profile.firstName,
       lastName: profile.lastName,
       gender: profile.gender,
+      image: profile.profileImg,
       isAdmin: profile.isAdmin
     },
     check: function () {
@@ -158,6 +168,19 @@ router.get('/profile/:id', async(req, res, next) => {
       } else {
         return false;
       }
+    }
+  });
+});
+
+router.post('/profile-img-upload', (req, res, next) => {
+  const user = req.session.user;
+  const newUser = { profileImg: (req.file.path).slice(6) };
+  User.updateOne({ _id: req.session.user._id }, { $set: newUser }, (err, doc) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(user);
+      res.redirect(`profile/${user._id}`);
     }
   });
 });

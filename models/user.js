@@ -7,6 +7,7 @@ const userSchema = mongoose.Schema({
   lastName: { type: String, required: true },
   password: { type: String, required: true },
   gender: { type: String },
+  profileImg: { type: String, default: '/images/default-user-image.png' },
   isAdmin: { type: Boolean, required: true, default: false }
 }, {
   timestamps: true,

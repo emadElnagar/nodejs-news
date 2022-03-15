@@ -36,8 +36,8 @@ form textarea:focus {
   border-bottom: 1px solid #000;
 }
 
-form input:required + label::after,
-form textarea:required + label::after {
+.field input:required + label::after,
+.field textarea:required + label::after {
   content: ' *';
 }
 
@@ -55,4 +55,50 @@ form textarea:required + label::after {
 
 .not-found a {
   font-size: 1.2rem;
+}
+
+input[type="file"] {
+  position: absolute;
+  z-index: -1;
+  top: 8px;
+  left: 8px;
+  font-size: 17px;
+}
+
+input[type="file"],
+input[type="file"]:focus {
+  border-bottom: 0;
+}
+
+label.img-upload {
+  font-size: 26px;
+  padding: 0 41px;
+}
+
+.button-wrap {
+  position: relative;
+}
+
+.navbar .auth-buttons .btn {
+  width: 100px;
+}
+
+.navbar .navbar-nav li a:focus {
+  background: none;
+  color: #000;
+}
+
+.profile-img-form {
+  height: 0;
+  transition: 0.3s all ease;
+}
+
+.profile-img:hover .profile-img-form {
+  border-top: 1px solid #aaa;
+  height: 22%;
+}
+
+.active-form {
+  border-top: 1px solid #aaa;
+  height: 22%;
 }
