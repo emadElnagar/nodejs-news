@@ -1,8 +1,19 @@
 var express = require('express');
 var router = express.Router();
 const { check, validationResult } = require('express-validator');
+const async = require('hbs/lib/async');
 const slugify = require('slugify');
 const Category = require('../models/category');
+const Article = require('../models/article');
+
+router.get('/', async(req, res, next) => {
+  const articles = await Article.find({})
+  res.render('articles/articles_list', {
+    title: 'Noticias-articles',
+    user: req.session.user,
+    articles: articles
+  })
+});
 
 router.get('/create-category', (req, res, next) => {
   let errorMessage = req.flash('error');
@@ -62,5 +73,23 @@ router.post('/create-category', [
     }
   })
 })
+
+router.get('/new', async(req, res, next) => {
+  let errorMessage = req.flash('error');
+  const category = await Category.find({});
+  if (req.session.user === undefined) {
+    res.redirect('/');
+  }
+  if (req.session.user.isAdmin === false) {
+    res.redirect('/');
+  }
+  context = { 
+    title: 'Noticias-new-category',
+    user: req.session.user,
+    categories: category,
+    messages: errorMessage
+  }
+  res.render('articles/new_article', context);
+});
 
 module.exports = router;

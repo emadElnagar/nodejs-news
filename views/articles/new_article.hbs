@@ -1,0 +1,44 @@
+<section class="py-5">
+  <div class="container">
+    <form action="/articles/new" class="shadow mx-auto px-4 py-5 w-100" method="post" enctype="multipart/form-data">
+      <h1 class="text-center text-capitalize">create new article</h1>
+      
+      <div class="field d-flex flex-column-reverse mt-2">
+        <input type="text" name="title" class="w-100" required>
+        <label for="title">title</label>
+      </div>
+      
+      <div class="field d-flex flex-column-reverse mt-2">
+        <textarea type="text" name="subject" class="w-100" required></textarea>
+        <label for="subject">subject</label>
+      </div>
+      
+      <div class="d-flex flex-column-reverse mt-2">
+        <div class="button-wrap">
+          <input id="image" name="image" type="file" required>
+          <label class="material-icons img-upload btn btn-dark" for="image">local_see</label>
+        </div>
+      </div>
+
+      <div class="d-flex flex-column-reverse mt-2">
+        <select name="category">
+          {{#each categories}}
+            {{#each this}}
+              <option value="{{this.title}}">{{this.title}}</option>
+            {{/each}}
+          {{/each}}
+        </select>
+        <label for="category">category</label>
+      </div>
+
+      <input type="submit" class="btn btn-warning mt-3 text-capitalize" value="post">
+    </form>
+    {{#each messages}}
+      <div class="d-flex justify-content-center">
+        <div class="alert alert-danger text-center mt-3 form-alert" role="alert">
+          {{this}}
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</section>

@@ -1,0 +1,44 @@
+{{#if user.isAdmin}}
+  <section class="py-5">
+    <div class="container">
+      <div class="d-flex justify-content-between">
+        <a href="/articles/new" class="btn btn-warning px-4 d-flex">
+          <span class="material-icons me-2">add</span>
+          create new article
+        </a>
+        <a href="/articles/create-category" class="btn btn-info px-4 d-flex">
+          <span class="material-icons me-2">add</span>
+          create new category
+        </a>
+      </div>
+    </div>
+  </section>
+{{/if}}
+
+<section class="py-5">
+  <div class="container">
+    {{#each articles}}
+      <div class="row">
+        {{#each this}}
+          <div class="col-12 col-md-6 col-lg-4">
+            <a href="#">
+              <div class="card">
+                <img
+                  src="/media/articles/{{this.image}}"
+                  class="card-img-top img-fluid img-thumbnail" 
+                  alt="oops! it's problem showing your photo"
+                >
+                <div class="card-body">
+                  <h2 class="text-dark text-capitalize">{{thsi.title}}</h2>
+                  <p class="text-black-50 card-text">
+                    {{this.subject}}
+                  </p>
+                </div>
+              </div>
+            </a>
+          </div>
+        {{/each}}
+      </div>
+    {{/each}}
+  </div>
+</section>
