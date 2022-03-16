@@ -5,6 +5,17 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const async = require('hbs/lib/async');
 const multer = require('multer');
+const fs = require('fs');
+
+const fileFilter = function(req, file, cb) {
+  if (file.mimetype !== 'image/png') {
+    cb(null, true)
+  } else if (file.mimetype !== 'image/jpg') {
+    cb(null, true)
+  } else {
+    cb(new Error('please enter jpg or png image'), false)
+  }
+}
 
 const storage = multer.diskStorage({
   destination:  function(req, file, cb) {
@@ -15,9 +26,20 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024*1024*5
+  },
+  fileFilter: fileFilter
+});
 
-router.use(upload.single('image'));
+router.use(upload.single('image'), (err, req, res, next) => {
+  if (err) {
+    req.flash('profileError', [err.message]);
+    res.redirect(`profile/${req.session.user._id}`);
+  }
+});
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -147,6 +169,7 @@ router.get('/logout', (req, res) => {
 router.get('/profile/:id', async(req, res, next) => {
   const userId = req.params.id;
   const profile = await User.findById(userId);
+  const errorMessage = req.flash('profileError');
   if (!profile) {
     res.render('404', { title: 'Noticias-profile', user: req.session.user });
     return;
@@ -154,6 +177,7 @@ router.get('/profile/:id', async(req, res, next) => {
   res.render('users/profile', {
     title: 'Noticias-profile',
     user: req.session.user,
+    message: errorMessage,
     profile: {
       id: profile._id,
       firstName: profile.firstName,
@@ -172,14 +196,25 @@ router.get('/profile/:id', async(req, res, next) => {
   });
 });
 
-router.post('/profile-img-upload', (req, res, next) => {
+router.post('/profile-img-upload', async(req, res, next) => {
   const user = req.session.user;
   const newUser = { profileImg: (req.file.path).slice(6) };
+  const userId = req.session.user._id;
+  const profile = await User.findById(userId);
+  const path = './public' + profile.profileImg;
+  if (profile.profileImg !== '/images/default-user-image.png') {
+    fs.unlink(path, (err) => {
+      if (err) {
+        req.flash('profileError', [err.message]);
+        res.redirect(`profile/${req.session.user._id}`);
+        return;
+      }
+    })
+  }
   User.updateOne({ _id: req.session.user._id }, { $set: newUser }, (err, doc) => {
     if (err) {
       console.log(err);
     } else {
-      console.log(user);
       res.redirect(`profile/${user._id}`);
     }
   });
