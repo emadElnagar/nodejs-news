@@ -3,6 +3,10 @@ a, a:hover {
   text-decoration: none;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 form.auth-form {
   max-width: 500px;
 }
@@ -68,11 +72,7 @@ input[type="file"] {
 input[type="file"],
 input[type="file"]:focus {
   border-bottom: 0;
-}
-
-label.img-upload {
-  font-size: 26px;
-  padding: 0 41px;
+  opacity: 0;
 }
 
 .button-wrap {

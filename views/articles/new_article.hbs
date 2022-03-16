@@ -4,24 +4,24 @@
       <h1 class="text-center text-capitalize">create new article</h1>
       
       <div class="field d-flex flex-column-reverse mt-2">
-        <input type="text" name="title" class="w-100" required>
+        <input id="title" type="text" name="title" class="w-100" required>
         <label for="title">title</label>
       </div>
       
       <div class="field d-flex flex-column-reverse mt-2">
-        <textarea type="text" name="subject" class="w-100" required></textarea>
+        <textarea id="subject" type="text" name="subject" class="w-100" required></textarea>
         <label for="subject">subject</label>
       </div>
       
       <div class="d-flex flex-column-reverse mt-2">
         <div class="button-wrap">
           <input id="image" name="image" type="file" required>
-          <label class="material-icons img-upload btn btn-dark" for="image">local_see</label>
+          <label class="material-icons btn btn-dark px-5 fs-4" for="image">local_see</label>
         </div>
       </div>
 
       <div class="d-flex flex-column-reverse mt-2">
-        <select name="category">
+        <select id="category" name="category">
           {{#each categories}}
             {{#each this}}
               <option value="{{this.title}}">{{this.title}}</option>
@@ -42,3 +42,34 @@
     {{/each}}
   </div>
 </section>
+
+<section class="py-5">
+  <div class="container">
+    <img src="" alt="it's problem showing you image" id="demo-image" class="img-fluid d-none">
+    <h1 id="demo-header" class="text-center text-capitalize py-3"></h1>
+    <p id="demo-paragraph"></p>
+  </div>
+</section>
+
+<script>
+  // LIVE PREVIEW FOR ARTICLE
+  const headerInput = document.getElementById('title');
+  const demoHeader = document.getElementById('demo-header');
+  const subjectInput = document.getElementById('subject');
+  const demoSubject = document.getElementById('demo-paragraph');
+  const imageUpload = document.getElementById('image');
+  headerInput.onchange = function () {
+    demoHeader.innerText = this.value;
+  }
+  subjectInput.onchange = function () {
+    demoSubject.innerText = this.value;
+  }
+  imageUpload.onchange = function () {
+    const reader = new FileReader();
+    reader.readAsDataURL(this.files[0]);
+    reader.onload = function () {
+      document.getElementById('demo-image').src = this.result;
+      document.getElementById('demo-image').classList.remove('d-none');
+    }
+  }
+</script>
