@@ -182,9 +182,11 @@ router.get('/profile/:id', async(req, res, next) => {
       id: profile._id,
       firstName: profile.firstName,
       lastName: profile.lastName,
+      email: profile.email,
       gender: profile.gender,
       image: profile.profileImg,
-      isAdmin: profile.isAdmin
+      isAdmin: profile.isAdmin,
+      createdAt: profile.createdAt.toDateString()
     },
     check: function () {
       if (req.session.user) {
@@ -211,6 +213,30 @@ router.post('/profile-img-upload', async(req, res, next) => {
       }
     })
   }
+  User.updateOne({ _id: req.session.user._id }, { $set: newUser }, (err, doc) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.redirect(`profile/${user._id}`);
+    }
+  });
+});
+
+router.post('/edit-username', (req, res, next) => {
+  const user = req.session.user;
+  const newUser = { firstName: req.body.firstName, lastName: req.body.lastName };
+  User.updateOne({ _id: req.session.user._id }, { $set: newUser }, (err, doc) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.redirect(`profile/${user._id}`);
+    }
+  });
+});
+
+router.post('/change-email', (req, res, next) => {
+  const user = req.session.user;
+  const newUser = { email: req.body.email };
   User.updateOne({ _id: req.session.user._id }, { $set: newUser }, (err, doc) => {
     if (err) {
       console.log(err);

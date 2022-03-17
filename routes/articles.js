@@ -79,8 +79,7 @@ router.get('/new', async(req, res, next) => {
   const category = await Category.find({});
   if (req.session.user === undefined) {
     res.redirect('/');
-  }
-  if (req.session.user.isAdmin === false) {
+  } else if (req.session.user.isAdmin === false) {
     res.redirect('/');
   }
   context = { 
