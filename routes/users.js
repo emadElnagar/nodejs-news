@@ -333,15 +333,25 @@ router.post('/change-password', [
   });
 });
 
-router.post('/delete-account', (req, res, next) => {
-  id = req.session.user._id;
-  User.deleteOne({ _id: id }, (err, doc) => {
+router.post('/delete-account', async(req, res, next) => {
+  const user = req.session.user;
+  const profile = await User.findById(user._id);
+  const path = './public' + profile.profileImg;
+  if (profile.profileImg !== '/images/default-user-image.png') {
+    fs.unlink(path, (err) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+    })
+  }
+  User.deleteOne({ _id: user._id }, (err, doc) => {
     if (err) {
       console.log(err);
     } else {
       res.redirect('logout');
     }
-  })
-})
+  });
+});
 
 module.exports = router;
