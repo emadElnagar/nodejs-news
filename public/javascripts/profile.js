@@ -38,3 +38,9 @@ let changePasswordForm = document.getElementById('change-password-form');
 changePasswordBtn.onclick = () => {
   changePasswordForm.classList.toggle('d-none');
 }
+// DELETE ACCOUNT
+const deleteAccountBtn = document.getElementById('delete-account');
+const deleteAccountForm = document.getElementById('delete-account-form');
+deleteAccountBtn.onclick = () => {
+  deleteAccountForm.classList.toggle('d-none');
+}

@@ -333,4 +333,15 @@ router.post('/change-password', [
   });
 });
 
+router.post('/delete-account', (req, res, next) => {
+  id = req.session.user._id;
+  User.deleteOne({ _id: id }, (err, doc) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.redirect('logout');
+    }
+  })
+})
+
 module.exports = router;

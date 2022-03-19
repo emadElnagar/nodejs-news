@@ -57,6 +57,14 @@
               <div class="my-3">
                 <span id="change-email" class="btn btn-outline-dark">change my email</span>
                 <span id="change-password" class="btn btn-outline-info">change password</span>
+                <span id="delete-account" class="btn btn-danger">delete my account</span>
+                <form id="delete-account-form" method="post" action="/users/delete-account" class="auth-form shadow mt-4 mx-auto px-4 py-5 d-none">
+                    <h5 class="text-center text-capitalize">are you sure you want to delete your account ?</h5>
+                  <div class="d-flex justify-content-center">
+                    <input type="submit" value="yes delete it" class="btn btn-warning me-3">
+                    <a href="/users/profile/{{profile.id}}" class="btn btn-light">cancel</a>
+                  </div>
+                </form>
                 <form method="post" action="/users/change-email" id="change-email-form" class="auth-form shadow mt-4 mx-auto px-4 py-5 d-none">
                   <div class="field d-flex flex-column-reverse mt-2">
                     <input type="text" id="email" value="{{profile.email}}" name="email" class="w-100" required>
