@@ -54,16 +54,52 @@
           <span class="fs-4 text-muted text-capitalize d-block">joined at {{profile.createdAt}}</span>
           {{#if profile}}
             {{#if check}}
-              <div id="email-edit" class="my-3 position-relative">
-                <span id="change-email" class="material-icons position-absolute top-0 end-50 fs-5 cursor-pointer d-none">create</span>
-                <span>{{profile.email}}</span>
-                <form method="post" action="/users/change-email" id="change-email-form" class="auth-form shadow mx-auto px-4 py-5 d-none">
+              <div class="my-3">
+                <span id="change-email" class="btn btn-outline-dark">change my email</span>
+                <span id="change-password" class="btn btn-outline-info">change password</span>
+                <form method="post" action="/users/change-email" id="change-email-form" class="auth-form shadow mt-4 mx-auto px-4 py-5 d-none">
                   <div class="field d-flex flex-column-reverse mt-2">
                     <input type="text" id="email" value="{{profile.email}}" name="email" class="w-100" required>
                     <label for="email">email</label>
                   </div>
                   <input type="submit" value="submit" class="btn btn-warning w-100 mt-3">
                 </form>
+                {{#each changeEmailError}}
+                  <div class="alert alert-danger mt-3 alert-dismissible fade show" role="alert">
+                    {{this}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {{/each}}
+                <form method="post" action="/users/change-password" id="change-password-form" class="auth-form shadow mt-4 mx-auto px-4 py-5 d-none">
+                  <div class="field d-flex flex-column-reverse mt-2">
+                    <input type="password" id="current-password" name="currentPassword" class="w-100" required>
+                    <label for="current-password">current password</label>
+                  </div>
+
+                  <div class="field d-flex flex-column-reverse mt-2">
+                    <input type="password" id="new-password" name="newPassword" class="w-100" required>
+                    <label for="new-password">new password</label>
+                  </div>
+
+                  <div class="field d-flex flex-column-reverse mt-2">
+                    <input type="password" id="confirm-new-password" name="confirmNewPassword" class="w-100" required>
+                    <label for="confirm-new-password">confirm new password</label>
+                  </div>
+
+                  <input type="submit" value="submit" class="btn btn-warning w-100 mt-3">
+                </form>
+                {{#each passworderrorMessage}}
+                  <div class="alert alert-danger mt-3 alert-dismissible fade show" role="alert">
+                    {{this}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {{/each}}
+                {{#if successMessage}}
+                  <div class="alert alert-success mt-3 alert-dismissible fade show" role="alert">
+                    {{successMessage}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {{/if}}
               </div>
             {{/if}}
           {{/if}}
@@ -85,6 +121,12 @@
 
           <input type="submit" value="submit" class="btn btn-warning w-100 mt-3">
         </form>
+        {{#each changeUserNameError}}
+          <div class="alert alert-danger mt-3 alert-dismissible fade show" role="alert">
+            {{this}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {{/each}}
       </div>
     </div>
   </div>
@@ -122,14 +164,13 @@
   // CHANGE EMAIL FORM
   let changeEmailBtn = document.getElementById('change-email');
   let changeEmailForm = document.getElementById('change-email-form');
-  let emailEdit = document.getElementById('email-edit');
-  emailEdit.onmousemove = () => {
-    changeEmailBtn.classList.remove('d-none');
-  }
-  emailEdit.onmouseout = () => {
-    changeEmailBtn.classList.add('d-none');
-  }
   changeEmailBtn.onclick = () => {
-    changeEmailForm.classList.toggle('d-none')
+    changeEmailForm.classList.toggle('d-none');
+  }
+  // CHNAGE PASSWORD
+  let changePasswordBtn = document.getElementById('change-password');
+  let changePasswordForm = document.getElementById('change-password-form');
+  changePasswordBtn.onclick = () => {
+    changePasswordForm.classList.toggle('d-none');
   }
 </script>

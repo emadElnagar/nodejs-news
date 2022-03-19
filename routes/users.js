@@ -170,6 +170,10 @@ router.get('/profile/:id', async(req, res, next) => {
   const userId = req.params.id;
   const profile = await User.findById(userId);
   const errorMessage = req.flash('profileError');
+  const passworderrorMessage = req.flash('changePasswordError');
+  const changeEmailError = req.flash('changeEmailError')
+  const successMessage = req.flash('success');
+  const changeUserNameError = req.flash('changeUserNameError')
   if (!profile) {
     res.render('404', { title: 'Noticias-profile', user: req.session.user });
     return;
@@ -178,6 +182,10 @@ router.get('/profile/:id', async(req, res, next) => {
     title: 'Noticias-profile',
     user: req.session.user,
     message: errorMessage,
+    passworderrorMessage: passworderrorMessage,
+    successMessage: successMessage,
+    changeEmailError: changeEmailError,
+    changeUserNameError: changeUserNameError,
     profile: {
       id: profile._id,
       firstName: profile.firstName,
@@ -222,25 +230,104 @@ router.post('/profile-img-upload', async(req, res, next) => {
   });
 });
 
-router.post('/edit-username', (req, res, next) => {
+router.post('/edit-username', [
+  check('firstName')
+    .not().isEmpty().withMessage('please enter your first name')
+    .isLength({ min: 3, max: 20 }).withMessage('first name must be between 3 and 20 characters')
+    .not().matches(/\d/)
+    .withMessage('first name can not contain a number'),
+  check('lastName')
+    .not().isEmpty().withMessage('please enter your last name')
+    .isLength({ min: 3, max: 20 }).withMessage('last name must be between 3 and 20 characters')
+    .not().matches(/\d/)
+    .withMessage('last name can not contain a number')
+], (req, res, next) => {
   const user = req.session.user;
+  const errors = validationResult(req);
+  if (! errors.isEmpty()) {
+    var validationErrors = [];
+    for(var i = 0; i < errors.errors.length; i++) {
+      validationErrors.push(errors.errors[i].msg);
+    }
+    req.flash('changeUserNameError', validationErrors);
+    res.redirect(`profile/${user._id}`);
+    return;
+  }
   const newUser = { firstName: req.body.firstName, lastName: req.body.lastName };
   User.updateOne({ _id: req.session.user._id }, { $set: newUser }, (err, doc) => {
     if (err) {
       console.log(err);
     } else {
+      req.flash('success', 'username changed successfully');
       res.redirect(`profile/${user._id}`);
     }
   });
 });
 
-router.post('/change-email', (req, res, next) => {
+router.post('/change-email', [
+  check('email')
+    .not().isEmpty().withMessage('please enter your email')
+    .isEmail().withMessage('please enter a valid email'),
+], (req, res, next) => {
   const user = req.session.user;
+  const errors = validationResult(req);
+  if (! errors.isEmpty()) {
+    var validationErrors = [];
+    for(var i = 0; i < errors.errors.length; i++) {
+      validationErrors.push(errors.errors[i].msg);
+    }
+    req.flash('changeEmailError', validationErrors);
+    res.redirect(`profile/${user._id}`);
+    return;
+  }
   const newUser = { email: req.body.email };
   User.updateOne({ _id: req.session.user._id }, { $set: newUser }, (err, doc) => {
     if (err) {
       console.log(err);
     } else {
+      req.flash('success', 'email changed successfully');
+      res.redirect(`profile/${user._id}`);
+    }
+  });
+});
+
+router.post('/change-password', [
+  check('currentPassword')
+    .not().isEmpty().withMessage('please enter your current password'),
+  check('newPassword')
+    .not().isEmpty().withMessage('please enter the new password')
+    .isLength({ min: 8 }).withMessage('password must be at least 8 characters'),
+  check('confirmNewPassword').custom((value, { req }) => {
+    if (value !== req.body.newPassword) {
+      throw new Error("passwrod and confirm passwrod doesn't match");
+    }
+    return true;
+  })
+], async(req, res, next) => {
+  const user = req.session.user;
+  const errors = validationResult(req);
+  if (! errors.isEmpty()) {
+    var validationErrors = [];
+    for(var i = 0; i < errors.errors.length; i++) {
+      validationErrors.push(errors.errors[i].msg);
+    }
+    req.flash('changePasswordError', validationErrors);
+    res.redirect(`profile/${user._id}`);
+    return;
+  }
+  const profile = await User.findOne({ email: user.email });
+  const validate = await bcrypt.compare(req.body.currentPassword, profile.password);
+  if (!validate) {
+    req.flash('changePasswordError', 'current password is wrong');
+    res.redirect(`profile/${user._id}`);
+    return;
+  }
+  const newUser = { password: new User().hashPassword(req.body.newPassword) };
+  User.updateOne({ _id: req.session.user._id }, {  $set: newUser }, (err, doc) => {
+    if (err) {
+      console.log(err);
+    } else {
+      req.flash('success', 'password changed successfully');
       res.redirect(`profile/${user._id}`);
     }
   });
