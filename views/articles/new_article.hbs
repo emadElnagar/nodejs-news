@@ -16,7 +16,7 @@
       <div class="d-flex flex-column-reverse mt-2">
         <div class="button-wrap">
           <input id="image" name="image" type="file" required>
-          <label class="material-icons btn btn-dark px-5 fs-4" for="image">local_see</label>
+          <label class="material-icons btn btn-dark px-4 fs-4" for="image">local_see</label>
         </div>
       </div>
 
@@ -40,6 +40,12 @@
         </div>
       </div>
     {{/each}}
+    {{#if imageErrorMessage}}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{imageErrorMessage}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {{/if}}
   </div>
 </section>
 
