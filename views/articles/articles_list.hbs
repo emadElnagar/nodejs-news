@@ -17,25 +17,30 @@
 
 <section class="py-5">
   <div class="container">
-    {{#each articles}}
-      <div class="row">
+    <div class="row">
+      {{#each articles}}
         {{#each this}}
-          <div class="col-12 col-md-6 col-lg-4">
-            <a href="#">
-              <div class="card">
-                <img
-                  src="{{this.image}}"
-                  class="card-img-top img-thumbnail" 
-                  alt="oops! it's problem showing your photo"
-                >
-                <div class="card-body">
-                  <h2 class="text-dark text-capitalize">{{this.title}}</h2>
+          {{#if this.image}}
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+              <a class="text-dark" href="/articles/{{this.slug}}">
+                <div class="card">
+                  <img
+                    src="{{this.image}}"
+                    class="card-img-top img-thumbnail" 
+                    alt="oops! it's problem showing your photo"
+                  >
+                  <div class="card-body">
+                    <h2 class="text-capitalize">{{this.title}}</h2>
+                    <div class="d-flex justify-content-start text-capitalize">
+                      <span>category: {{this.category}}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </a>
-          </div>
+              </a>
+            </div>
+          {{/if}}
         {{/each}}
-      </div>
-    {{/each}}
+      {{/each}}
+    </div>
   </div>
 </section>

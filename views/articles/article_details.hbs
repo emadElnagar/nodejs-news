@@ -1,0 +1,25 @@
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-center">
+      <img src="{{article.image}}" alt="it's problem showing you image" class="img-fluid">
+    </div>
+    <div class="text-capitalize mt-3">
+      by:
+      <a href="/users/profile/{{author.id}}">
+        <img
+          src="{{author.img}}"
+          style="height: 30px; width: 30px;"
+          class="rounded-circle mx-2"
+          alt="problem showing photo"
+        >
+        <b>{{author.firstName}} {{author.lastName}}</b>
+      </a>
+    </div>
+    <div class="text-capitalize">
+      <span class="d-block">create at: {{article.createdAt}}</span>
+      <span class="d-block">last update: {{article.updatedAt}}</span>
+    </div>
+    <h1 class="text-center text-capitalize py-3">{{article.title}}</h1>
+    <p>{{article.subject}}</p>
+  </div>
+</section>

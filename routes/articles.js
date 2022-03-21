@@ -5,6 +5,7 @@ const async = require('hbs/lib/async');
 const slugify = require('slugify');
 const Category = require('../models/category');
 const Article = require('../models/article');
+const User = require('../models/user');
 const multer = require('multer');
 
 const fileFilter = function(req, file, cb) {
@@ -42,7 +43,7 @@ router.use(upload.single('image'), (err, req, res, next) => {
 });
 
 router.get('/', async(req, res, next) => {
-  const articles = await Article.find({})
+  const articles = await Article.find({});
   res.render('articles/articles_list', {
     title: 'Noticias-articles',
     user: req.session.user,
@@ -133,8 +134,6 @@ router.post('/new', [
     .not().isEmpty().withMessage('please enter the article title'),
   check('subject')
     .not().isEmpty().withMessage('please enter the article subject'),
-  // check('image')
-  //   .not().isEmpty().withMessage('please upload the article image'),
   check('category')
     .not().isEmpty().withMessage('please choose the article category'),
 ], (req, res, next) => {
@@ -170,10 +169,33 @@ router.post('/new', [
         if (err) {
           console.log(err);
         }
-        res.redirect('/');
+        res.redirect('/articles');
       });
     }
   });
 });
+
+router.get('/:slug', async(req, res, next) => {
+  const article = await Article.findOne({slug: req.params.slug});
+  const author = await User.findById(article.author);
+  res.render('articles/article_details', {
+    user: req.session.user,
+    author: {
+      id: author._id,
+      firstName: author.firstName,
+      lastName: author.lastName,
+      img: author.profileImg,
+    },
+    article: {
+      title: article.title,
+      image: article.image,
+      subject: article.subject,
+      author: article.author,
+      category: article.category,
+      createdAt: article.createdAt.toDateString(),
+      updatedAt: article.updatedAt.toDateString(),
+    }
+  })
+})
 
 module.exports = router;
