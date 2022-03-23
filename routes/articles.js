@@ -43,7 +43,7 @@ router.use(upload.single('image'), (err, req, res, next) => {
 });
 
 router.get('/', async(req, res, next) => {
-  const articles = await Article.find({});
+  const articles = await Article.find({}, { image: 1, title: 1, slug: 1, category: 1 });
   res.render('articles/articles_list', {
     title: 'Noticias-articles',
     user: req.session.user,
@@ -176,10 +176,12 @@ router.post('/new', [
 });
 
 router.get('/:slug', async(req, res, next) => {
-  const article = await Article.findOne({slug: req.params.slug});
+  const article = await Article.findOne({ slug: req.params.slug });
   const author = await User.findById(article.author);
+  const relatedArticle = await Article.find({ category: article.category, slug: { $ne: article.slug } }, { title: 1, image: 1, slug: 1 } );
   res.render('articles/article_details', {
     user: req.session.user,
+    relatedArticles: relatedArticle,
     author: {
       id: author._id,
       firstName: author.firstName,

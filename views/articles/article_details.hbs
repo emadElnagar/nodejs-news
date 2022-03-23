@@ -1,25 +1,44 @@
 <section class="py-5">
   <div class="container">
-    <div class="d-flex justify-content-center">
-      <img src="{{article.image}}" alt="it's problem showing you image" class="img-fluid">
+    <div class="row">
+      <div class="col-12 col-md-9">
+        <div class="d-flex justify-content-center">
+          <img src="{{article.image}}" alt="it's problem showing you image" class="img-fluid">
+        </div>
+        <div class="text-capitalize mt-3 d-flex justify-content-between">
+          <div>
+            created by:
+            <a href="/users/profile/{{author.id}}">
+              <img src="{{author.img}}" style="height: 30px; width: 30px;" class="rounded-circle mx-1"
+                alt="problem showing photo">
+              <b>{{author.firstName}} {{author.lastName}}</b>
+            </a>
+            <span class="text-dark">at: {{article.createdAt}}</span>
+          </div>
+          <div>
+            <span>last update: {{article.updatedAt}}</span>
+          </div>
+        </div>
+        <h1 class="text-center text-capitalize py-3">{{article.title}}</h1>
+        <p>{{article.subject}}</p>
+      </div>
+      <div class="col-12 col-md-3">
+        <h5 class="text-capitalize text-center mb-4">related articles</h5>
+        {{#each relatedArticles}}
+          {{#each this}}
+            {{#if this.image}}
+              <a href="/articles/{{this.slug}}">
+                <div class="card mb-3">
+                  <img src="{{this.image}}" class="card-img-top" alt="it's problem showin your photo">
+                  <div class="card-body">
+                    <h6 class="card-title text-center text-dark text-capitalize">{{this.title}}</h6>
+                  </div>
+                </div>
+              </a>
+            {{/if}}
+          {{/each}}
+        {{/each}}
+      </div>
     </div>
-    <div class="text-capitalize mt-3">
-      by:
-      <a href="/users/profile/{{author.id}}">
-        <img
-          src="{{author.img}}"
-          style="height: 30px; width: 30px;"
-          class="rounded-circle mx-2"
-          alt="problem showing photo"
-        >
-        <b>{{author.firstName}} {{author.lastName}}</b>
-      </a>
-    </div>
-    <div class="text-capitalize">
-      <span class="d-block">create at: {{article.createdAt}}</span>
-      <span class="d-block">last update: {{article.updatedAt}}</span>
-    </div>
-    <h1 class="text-center text-capitalize py-3">{{article.title}}</h1>
-    <p>{{article.subject}}</p>
   </div>
 </section>

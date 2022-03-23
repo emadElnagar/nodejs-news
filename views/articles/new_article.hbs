@@ -24,7 +24,9 @@
         <select id="category" name="category">
           {{#each categories}}
             {{#each this}}
-              <option value="{{this.title}}">{{this.title}}</option>
+              {{#if this.title}}
+                <option value="{{this.title}}">{{this.title}}</option>
+              {{/if}}
             {{/each}}
           {{/each}}
         </select>

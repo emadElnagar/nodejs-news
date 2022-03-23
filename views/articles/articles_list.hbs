@@ -1,6 +1,10 @@
 {{#if user.isAdmin}}
   <section class="py-5 bg-light">
     <div class="container">
+      <p class="d-flex">
+        <span class="material-icons">lock</span>
+        this section is private for admins
+      </p>
       <div class="d-flex justify-content-between">
         <a href="/articles/new" class="btn btn-warning px-4 d-flex">
           <span class="material-icons me-2">add</span>
@@ -26,7 +30,7 @@
                 <div class="card">
                   <img
                     src="{{this.image}}"
-                    class="card-img-top img-thumbnail" 
+                    class="card-img-top" 
                     alt="oops! it's problem showing your photo"
                   >
                   <div class="card-body">
