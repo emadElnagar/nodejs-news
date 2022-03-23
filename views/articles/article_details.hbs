@@ -1,7 +1,7 @@
 <section class="py-5">
   <div class="container">
     <div class="row">
-      <div class="col-12 col-md-9">
+      <div class="col-12 col-md-9 {{#unless license}}mx-auto{{/unless}}">
         <div class="d-flex justify-content-center">
           <img src="{{article.image}}" alt="it's problem showing you image" class="img-fluid">
         </div>
@@ -22,23 +22,25 @@
         <h1 class="text-center text-capitalize py-3">{{article.title}}</h1>
         <p>{{article.subject}}</p>
       </div>
-      <div class="col-12 col-md-3">
-        <h5 class="text-capitalize text-center mb-4">related articles</h5>
-        {{#each relatedArticles}}
-          {{#each this}}
-            {{#if this.image}}
-              <a href="/articles/{{this.slug}}">
-                <div class="card mb-3">
-                  <img src="{{this.image}}" class="card-img-top" alt="it's problem showin your photo">
-                  <div class="card-body">
-                    <h6 class="card-title text-center text-dark text-capitalize">{{this.title}}</h6>
+      {{#if relatedArticles}}
+        <div class="col-12 col-md-3">
+          <h5 class="text-capitalize text-center mb-4">related articles</h5>
+          {{#each relatedArticles}}
+            {{#each this}}
+              {{#if this.image}}
+                <a href="/articles/{{this.slug}}">
+                  <div class="card mb-3">
+                    <img src="{{this.image}}" class="card-img-top" alt="it's problem showin your photo">
+                    <div class="card-body">
+                      <h6 class="card-title text-center text-dark text-capitalize">{{this.title}}</h6>
+                    </div>
                   </div>
-                </div>
-              </a>
-            {{/if}}
+                </a>
+              {{/if}}
+            {{/each}}
           {{/each}}
-        {{/each}}
-      </div>
+        </div>
+      {{/if}}
     </div>
   </div>
 </section>
