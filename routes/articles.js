@@ -44,7 +44,7 @@ router.use(upload.single('image'), (err, req, res, next) => {
 });
 
 router.get('/', async(req, res, next) => {
-  const articles = await Article.find({}, { image: 1, title: 1, slug: 1, category: 1 });
+  const articles = await Article.find({}, { image: 1, title: 1, slug: 1, category: 1 }).sort('-updatedAt');
   res.render('articles/articles_list', {
     title: 'Noticias-articles',
     user: req.session.user,
@@ -258,7 +258,7 @@ router.get('/:slug', async(req, res, next) => {
     res.render('404', { user: req.session.user, title: 'Noticias-article' });
   } else {
     const author = await User.findById(article.author);
-    const relatedArticle = await Article.find({ category: article.category, slug: { $ne: article.slug } }, { title: 1, image: 1, slug: 1 } ).limit(4);
+    const relatedArticle = await Article.find({ category: article.category, slug: { $ne: article.slug } }, { title: 1, image: 1, slug: 1 } ).sort('-updatedAt').limit(4);
     res.render('articles/article_details', {
       user: req.session.user,
       relatedArticles: relatedArticle,
