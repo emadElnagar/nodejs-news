@@ -1,3 +1,36 @@
+{{#if user.isAdmin}}
+  <section class="py-5 bg-light">
+    <div class="container">
+      <p class="d-flex">
+        <span class="material-icons">lock</span>
+        this section is private for admins
+      </p>
+      <div class="d-flex justify-content-between">
+        <a href="/articles/update/{{article.slug}}" class="btn btn-info px-4 d-flex">
+          <span class="material-icons me-2">update</span>
+          update article
+        </a>
+        <button id="delet-article" class="btn btn-danger px-4 d-flex">
+          <span class="material-icons me-2">delete</span>
+          delete article
+        </button>
+      </div>
+      <form 
+        class="shadow mx-auto mt-3 px-4 py-3 w-100 d-none" 
+        id="delet-article-form" 
+        style="max-width: 400px;" 
+        method="post"
+      >
+        <h5 class="text-capitalize text-center">are you sure you want to delete this article ?</h5>
+        <div class="d-flex justify-content-center mt-3">
+          <a href="/articles/{{article.slug}}" class="btn btn-secondary me-2">cancel</a>
+          <input type="submit" class="btn btn-danger" value="yes delete it">
+        </div>
+      </form>
+    </div>
+  </section>
+{{/if}}
+
 <section class="py-5">
   <div class="container">
     <div class="row">
@@ -44,3 +77,9 @@
     </div>
   </div>
 </section>
+
+<script>
+  document.getElementById('delet-article').onclick = () => {
+    document.getElementById('delet-article-form').classList.remove('d-none');
+  }
+</script>

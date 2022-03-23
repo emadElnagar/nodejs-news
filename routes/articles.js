@@ -7,6 +7,7 @@ const Category = require('../models/category');
 const Article = require('../models/article');
 const User = require('../models/user');
 const multer = require('multer');
+const fs = require('fs');
 
 const fileFilter = function(req, file, cb) {
   if (file.mimetype !== 'image/png') {
@@ -120,7 +121,7 @@ router.get('/new', async(req, res, next) => {
     res.redirect('/');
   }
   context = { 
-    title: 'Noticias-new-category',
+    title: 'Noticias-new-article',
     user: req.session.user,
     categories: category,
     messages: errorMessage,
@@ -175,29 +176,130 @@ router.post('/new', [
   });
 });
 
+router.get('/update/:slug', async(req, res, next) => {
+  const article = await Article.findOne({ slug: req.params.slug });
+  const category = await Category.find({});
+  const errorMessage = req.flash('error');
+  const imageErrorMessage = req.flash('profileError');
+  if (req.session.user === undefined) {
+    res.redirect('/');
+  } else if (req.session.user.isAdmin === false) {
+    res.redirect('/');
+  }
+  if (!article) {
+    res.render('404', { user: req.session.user, title: 'Noticias-article' });
+  } else {
+    const errors = validationResult(req);
+    if (! errors.isEmpty()) {
+      var validationErrors = [];
+      for(var i = 0; i < errors.errors.length; i++) {
+        validationErrors.push(errors.errors[i].msg);
+      }
+      req.flash('error', validationErrors);
+      res.redirect(`/update/${article.slug}`);
+      return;
+    }
+    res.render('articles/update_article' , {
+      user: req.session.user,
+      title: 'Noticias-update-article',
+      categories: category,
+      errorMessage: errorMessage,
+      imageErrorMessage: imageErrorMessage,
+      article: {
+        id: article._id,
+        title: article.title,
+        subject: article.subject,
+        image: article.image
+      }
+    });
+  }
+});
+
+router.post('/update/:slug', [
+  check('title')
+    .not().isEmpty().withMessage('please enter the article title'),
+  check('subject')
+    .not().isEmpty().withMessage('please enter the article subject'),
+  check('category')
+    .not().isEmpty().withMessage('please choose the article category'),
+], async(req, res, next) => {
+  const article = await Article.findOne({ slug: req.params.slug });
+  const updatedArticle = {
+    title: req.body.title,
+    subject: req.body.subject,
+    image: (req.file.path).slice(6) || article.image,
+    slug: slugify(req.body.title, {
+      replacement: '-',
+      lower: true,
+      strict: true,
+    })
+  }
+  if (req.file.path) {
+    const path = './public' + article.image;
+    fs.unlink(path, (err) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+    })
+  }
+  Article.updateOne({ _id: article._id }, { $set: updatedArticle }, (err, doc) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.redirect('/articles');
+    }
+  });
+});
+
 router.get('/:slug', async(req, res, next) => {
   const article = await Article.findOne({ slug: req.params.slug });
-  const author = await User.findById(article.author);
-  const relatedArticle = await Article.find({ category: article.category, slug: { $ne: article.slug } }, { title: 1, image: 1, slug: 1 } ).limit(4);
-  res.render('articles/article_details', {
-    user: req.session.user,
-    relatedArticles: relatedArticle,
-    author: {
-      id: author._id,
-      firstName: author.firstName,
-      lastName: author.lastName,
-      img: author.profileImg,
-    },
-    article: {
-      title: article.title,
-      image: article.image,
-      subject: article.subject,
-      author: article.author,
-      category: article.category,
-      createdAt: article.createdAt.toDateString(),
-      updatedAt: article.updatedAt.toDateString(),
+  if (!article) {
+    res.render('404', { user: req.session.user, title: 'Noticias-article' });
+  } else {
+    const author = await User.findById(article.author);
+    const relatedArticle = await Article.find({ category: article.category, slug: { $ne: article.slug } }, { title: 1, image: 1, slug: 1 } ).limit(4);
+    res.render('articles/article_details', {
+      user: req.session.user,
+      relatedArticles: relatedArticle,
+      title: `Noticias-${article.slug}`,
+      author: {
+        id: author._id,
+        firstName: author.firstName,
+        lastName: author.lastName,
+        img: author.profileImg,
+      },
+      article: {
+        id: article._id,
+        title: article.title,
+        image: article.image,
+        subject: article.subject,
+        author: article.author,
+        category: article.category,
+        slug: article.slug,
+        createdAt: article.createdAt.toDateString(),
+        updatedAt: article.updatedAt.toDateString(),
+      }
+    });
+  }
+});
+
+
+router.post('/:slug', async(req, res, next) => {
+  const article = await Article.findOne({ slug: req.params.slug });
+  const path = './public' + article.image;
+  fs.unlink(path, (err) => {
+    if (err) {
+      console.log(err);
+      return;
     }
-  })
-})
+  });
+  Article.deleteOne({ _id: article._id }, (err, doc) => {
+    if (err) {
+      console.log(err);
+    }
+    res.redirect('/articles');
+  });
+});
 
 module.exports = router;
