@@ -26,18 +26,16 @@
         {{#each this}}
           {{#if this.image}}
             <div class="col-12 col-md-6 col-lg-4 mb-4">
-              <a class="text-dark" href="/articles/{{this.slug}}">
-                <div class="card">
+              <a class="text-light" href="/articles/{{this.slug}}">
+                <div class="card shadow position-relative">
                   <img
                     src="{{this.image}}"
                     class="card-img-top" 
                     alt="oops! it's problem showing your photo"
                   >
-                  <div class="card-body">
+                  <span class="position-absolute top-0 left-0 m-4 px-3 badge rounded-pill bg-warning text-dark">{{this.category}}</span>
+                  <div class="card-body position-absolute w-100 h-100 bg-transparent d-flex flex-column justify-content-end align-items-center">
                     <h2 class="text-capitalize">{{this.title}}</h2>
-                    <div class="d-flex justify-content-start text-capitalize">
-                      <span>category: {{this.category}}</span>
-                    </div>
                   </div>
                 </div>
               </a>
