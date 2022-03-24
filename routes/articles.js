@@ -284,7 +284,6 @@ router.get('/:slug', async(req, res, next) => {
   }
 });
 
-
 router.post('/:slug', async(req, res, next) => {
   const article = await Article.findOne({ slug: req.params.slug });
   const path = './public' + article.image;

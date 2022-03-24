@@ -43,7 +43,7 @@ router.use(upload.single('image'), (err, req, res, next) => {
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  res.render('404', { title: 'Noticias-users', user: req.session.user });
 });
 
 router.get('/register', (req, res, next) => {
@@ -135,6 +135,7 @@ router.get('/login', (req, res, next) => {
 router.post('/login', async (req, res, next)=> {
   const user = await User.findOne({ email: req.body.email });
   const loginError = "wrong email or password";
+  const nextPage = req.query.next;
   if(!user) {
     req.flash('loginError', loginError);
     res.redirect('login');
@@ -154,7 +155,11 @@ router.post('/login', async (req, res, next)=> {
   loggedin.user.lastName = user.lastName;
   loggedin.user.gender = user.gender;
   loggedin.user.isAdmin = user.isAdmin;
-  res.redirect('/');
+  if(nextPage === undefined) {
+    res.redirect('/');
+  } else {
+    res.redirect(nextPage);
+  }
 });
 
 router.get('/logout', (req, res) => {
