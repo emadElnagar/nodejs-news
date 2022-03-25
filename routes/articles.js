@@ -252,6 +252,23 @@ router.post('/update/:slug', [
   });
 });
 
+router.post('/delete/:slug', async(req, res, next) => {
+  const article = await Article.findOne({ slug: req.params.slug });
+  const path = './public' + article.image;
+  fs.unlink(path, (err) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+  });
+  Article.deleteOne({ _id: article._id }, (err, doc) => {
+    if (err) {
+      console.log(err);
+    }
+    res.redirect('/articles');
+  });
+});
+
 router.get('/:slug', async(req, res, next) => {
   const article = await Article.findOne({ slug: req.params.slug });
   if (!article) {
@@ -282,23 +299,6 @@ router.get('/:slug', async(req, res, next) => {
       }
     });
   }
-});
-
-router.post('/:slug', async(req, res, next) => {
-  const article = await Article.findOne({ slug: req.params.slug });
-  const path = './public' + article.image;
-  fs.unlink(path, (err) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-  });
-  Article.deleteOne({ _id: article._id }, (err, doc) => {
-    if (err) {
-      console.log(err);
-    }
-    res.redirect('/articles');
-  });
 });
 
 module.exports = router;
