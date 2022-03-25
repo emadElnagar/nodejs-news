@@ -20,6 +20,7 @@
         id="delet-article-form" 
         style="max-width: 400px;" 
         method="post"
+        action="/articles/delete/{{article.slug}}"
       >
         <h5 class="text-capitalize text-center">are you sure you want to delete this article ?</h5>
         <div class="d-flex justify-content-center mt-3">
@@ -54,6 +55,49 @@
         </div>
         <h1 class="text-center text-capitalize py-3">{{article.title}}</h1>
         <p>{{article.subject}}</p>
+        <hr>
+        {{!-- START ARTICLE COMMENT --}}
+        <div class="comments my-3">
+          <h4 class="text-star text-capitalize">comments</h4>
+          {{#if user}}
+            <div class="comments-form">
+              <form method="post">
+                <textarea name="comment" type="text" placeholder="type your comment"
+                  class="h-auto w-100 border border-1 py-2 px-2"></textarea>
+                <input type="submit" class="btn btn-warning px-4" value="post">
+              </form>
+            </div>
+          {{else}}
+            <div>
+              <a class="text-capitalize" href="/users/login?next=/articles/{{article.slug}}">
+                <div class="comments-form">
+                  <form method="post">
+                    <textarea name="comment" type="text" placeholder="type your comment"
+                      class="h-auto w-100 border border-1 py-2 px-2"></textarea>
+                  </form>
+                </div>
+              </a>
+            </div>
+          {{/if}}
+          <div class="comments-created mt-4">
+            {{#each comments}}
+              {{#each this}}
+                {{#if this.content}}
+                  <div>
+                    <a href="/users/profile/{{this.user.id}}" class="text-capitalize">
+                      <img src="{{this.user.image}}" style="height: 30px; width: 30px;" class="rounded-circle mx-1"
+                        alt="problem showing photo">
+                      <b>{{this.user.firstName}} {{this.user.lastName}}</b>
+                    </a>
+                    <p class="ps-5">{{this.content}}</p>
+                    <hr>
+                  </div>
+                {{/if}}
+              {{/each}}
+            {{/each}}
+          </div>
+        </div>
+        {{!-- END ARTICLE COMMENT --}}
       </div>
       {{#if relatedArticles}}
         <div class="col-12 col-md-3">

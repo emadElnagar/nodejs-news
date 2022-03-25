@@ -118,6 +118,7 @@ router.post('/register', [
         loggedin.user.lastName = user.lastName;
         loggedin.user.gender = user.gender;
         loggedin.user.isAdmin = user.isAdmin;
+        loggedin.user.image = user.profileImg;
         res.redirect('/');
       });
     }
@@ -155,6 +156,7 @@ router.post('/login', async (req, res, next)=> {
   loggedin.user.lastName = user.lastName;
   loggedin.user.gender = user.gender;
   loggedin.user.isAdmin = user.isAdmin;
+  loggedin.user.image = user.profileImg;
   if(nextPage === undefined) {
     res.redirect('/');
   } else {
