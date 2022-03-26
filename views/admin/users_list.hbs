@@ -1,0 +1,49 @@
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-start">
+      <a href="#" class="d-flex text-dark btn btn-warning rounded-pill p-1 px-3 text-capitalize">
+        <span>add</span>
+        <span class="material-icons">add</span>
+      </a>
+    </div>
+    <h1 class="text-capitalize text-center mb-4">users</h1>
+    <table class="w-100 text-capitalize">
+      <thead>
+        <tr class="bg-warning border border-1">
+          <th class="p-2">title</th>
+          <th class="p-2">isAdmin</th>
+          <th class="p-2 text-center">manage user</th>
+          <th class="p-2 text-center">delete user</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each users}}
+          {{#each this}}
+            {{#if this.email}}
+              <tr>
+                <td class="p-2 border border-top-0">
+                  <a href="#">{{this.firstName}} {{this.lastName}}</a>
+                </td>
+                <td class="p-2 border border-top-0">
+                  {{this.isAdmin}}
+                </td>
+                <td class="p-2 border border-top-0 text-center">
+                  <a href="#" class="d-inline-flex btn btn-warning rounded-pill px-3 ms-2">
+                    <span>manage</span>
+                    <span class="material-icons ms-1">manage_accounts</span>
+                  </a>
+                </td>
+                <td class="p-2 border border-top-0 text-center">
+                  <a href="#" class="d-inline-flex btn btn-warning rounded-pill px-3">
+                    <span>delete</span>
+                    <span class="material-icons ms-1">delete</span>
+                  </a>
+                </td>
+              </tr>
+            {{/if}}
+          {{/each}}
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</section>

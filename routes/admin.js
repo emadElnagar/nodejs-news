@@ -2,6 +2,7 @@ var express = require('express');
 const async = require('hbs/lib/async');
 var router = express.Router();
 const User = require('../models/user');
+const Article = require('../models/article');
 const Category = require('../models/category');
 const bcrypt = require('bcrypt');
 const { isAdmin } = require('../auth');
@@ -61,6 +62,24 @@ router.get('/categories', isAdmin, async(req, res) => {
     user: req.session.user,
     categories: categories
   });
-})
+});
+
+router.get('/articles', isAdmin, async(req, res) => {
+  const articles = await Article.find({});
+  res.render('admin/article_list', {
+    title: 'Noticias-admin-articles',
+    user: req.session.user,
+    articles: articles
+  });
+});
+
+router.get('/users', isAdmin, async(req, res) => {
+  const users = await User.find({});
+  res.render('admin/users_list', {
+    title: 'Noticias-admin-articles',
+    user: req.session.user,
+    users: users
+  });
+});
 
 module.exports = router;
