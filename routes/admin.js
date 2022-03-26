@@ -2,18 +2,23 @@ var express = require('express');
 const async = require('hbs/lib/async');
 var router = express.Router();
 const User = require('../models/user');
+const Category = require('../models/category');
 const bcrypt = require('bcrypt');
 
-router.get('/', (req, res) => {
+const isAdmin = (req, res, next) => {
   if(req.session.user) {
     if (req.session.user.isAdmin) {
-      res.render('admin/admin_main', { title: 'Noticias-admin', user: req.session.user });
+      next();
     } else {
       res.render('404', { title: 'Noticias', user: req.session.user });
     }
   } else {
     res.redirect('/admin/login');
   }
+}
+
+router.get('/', isAdmin, (req, res) => {
+  res.render('admin/admin_main', { title: 'Noticias-admin', user: req.session.user });
 });
 
 router.get('/login', (req, res) => {
@@ -59,5 +64,14 @@ router.post('/login', async(req, res) => {
     res.redirect('login');
   }
 });
+
+router.get('/categories', isAdmin, async(req, res) => {
+  const categories = await Category.find({});
+  res.render('admin/admin_categories', {
+    title: 'Noticias-admin-categories',
+    user: req.session.user,
+    categories: categories
+  });
+})
 
 module.exports = router;

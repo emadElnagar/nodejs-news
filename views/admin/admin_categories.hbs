@@ -1,0 +1,43 @@
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-start">
+      <a href="#" class="d-flex text-dark btn btn-warning rounded-pill p-1 px-3 text-capitalize">
+        <span>add</span>
+        <span class="material-icons">add</span>
+      </a>
+    </div>
+    <h1 class="text-capitalize text-center mb-4">categories</h1>
+    <table class="w-100 text-capitalize">
+      <thead>
+        <tr class="bg-warning border border-1">
+          <th class="p-2">title</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each categories}}
+          {{#each this}}
+            {{#if this.title}}
+              <tr>
+                <td class="p-2 border border-top-0 d-flex justify-content-between">
+                  <div class="d-flex justify-content-center flex-column">
+                    <a href="#">{{this.title}}</a>
+                  </div>
+                  <div>
+                    <a href="#" class="d-inline-flex btn btn-warning rounded-pill px-3 ms-2">
+                      <span>edit</span>
+                      <span class="material-icons ms-1">edit</span>
+                    </a>
+                    <a href="#" class="d-inline-flex btn btn-warning rounded-pill px-3">
+                      <span>add</span>
+                      <span class="material-icons ms-1">add</span>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            {{/if}}
+          {{/each}}
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</section>
