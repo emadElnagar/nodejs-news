@@ -23,14 +23,21 @@
               {{user.firstName}}
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item d-flex justify-content-between" href="/users/profile/{{user._id}}">
+              <li><a class="dropdown-item text-capitalize d-flex justify-content-between" href="/users/profile/{{user._id}}">
                 profile
                 <span class="material-icons">account_box</span>
               </a></li>
-              <li><a class="dropdown-item d-flex justify-content-between" href="/users/logout">
+              <li><a class="dropdown-item text-capitalize d-flex justify-content-between" href="/users/logout">
                 logout
                 <span class="material-icons">logout</span>
               </a></li>
+              {{#if user.isAdmin}}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-capitalize d-flex justify-content-between" href="/admin">
+                  admin
+                  <span class="material-icons">lock</span>
+                </a></li>
+              {{/if}}
             </ul>
           </li>
         </ul>
