@@ -20,7 +20,7 @@
         <ul class="nav navbar-nav ms-auto">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-capitalize text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              {{user.firstName}}
+              <img class="rounded-circle" src="{{user.image}}" style="width: 30px;"> {{user.firstName}}
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li><a class="dropdown-item text-capitalize d-flex justify-content-between" href="/users/profile/{{user._id}}">

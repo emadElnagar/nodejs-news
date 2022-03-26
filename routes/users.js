@@ -227,6 +227,7 @@ router.post('/profile-img-upload', async(req, res, next) => {
     if (err) {
       console.log(err);
     } else {
+      req.session.user.image = newUser.profileImg;
       res.redirect(`profile/${user._id}`);
     }
   });
