@@ -9,6 +9,7 @@ const User = require('../models/user');
 const Comment = require('../models/comment')
 const multer = require('multer');
 const fs = require('fs');
+const { isAuth, isAdmin } = require('../auth');
 
 const fileFilter = function(req, file, cb) {
   if (file.mimetype !== 'image/png') {
@@ -53,7 +54,7 @@ router.get('/', async(req, res, next) => {
   })
 });
 
-router.get('/create-category', (req, res, next) => {
+router.get('/create-category', isAuth, isAdmin, (req, res, next) => {
   let errorMessage = req.flash('error');
   if (req.session.user === undefined) {
     res.redirect('/');
@@ -69,7 +70,7 @@ router.get('/create-category', (req, res, next) => {
   res.render('articles/new_category', context);
 });
 
-router.post('/create-category', [
+router.post('/create-category', isAuth, isAdmin, [
   check('title')
     .not().isEmpty().withMessage('please enter category title')
 ], (req, res, next) => {
@@ -112,7 +113,7 @@ router.post('/create-category', [
   })
 })
 
-router.get('/new', async(req, res, next) => {
+router.get('/new', isAuth, isAdmin, async(req, res, next) => {
   let errorMessage = req.flash('error');
   const category = await Category.find({});
   const imageErrorMessage = req.flash('profileError');
@@ -131,7 +132,7 @@ router.get('/new', async(req, res, next) => {
   res.render('articles/new_article', context);
 });
 
-router.post('/new', [
+router.post('/new', isAuth, isAdmin, [
   check('title')
     .not().isEmpty().withMessage('please enter the article title'),
   check('subject')

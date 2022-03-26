@@ -4,18 +4,7 @@ var router = express.Router();
 const User = require('../models/user');
 const Category = require('../models/category');
 const bcrypt = require('bcrypt');
-
-const isAdmin = (req, res, next) => {
-  if(req.session.user) {
-    if (req.session.user.isAdmin) {
-      next();
-    } else {
-      res.render('404', { title: 'Noticias', user: req.session.user });
-    }
-  } else {
-    res.redirect('/admin/login');
-  }
-}
+const { isAdmin } = require('../auth');
 
 router.get('/', isAdmin, (req, res) => {
   res.render('admin/admin_main', { title: 'Noticias-admin', user: req.session.user });

@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const async = require('hbs/lib/async');
 const multer = require('multer');
 const fs = require('fs');
+const { isNotAuth } = require('../auth');
 
 const fileFilter = function(req, file, cb) {
   if (file.mimetype !== 'image/png') {
@@ -46,15 +47,12 @@ router.get('/', function(req, res, next) {
   res.render('404', { title: 'Noticias-users', user: req.session.user });
 });
 
-router.get('/register', (req, res, next) => {
+router.get('/register', isNotAuth, (req, res, next) => {
   let errorMessage = req.flash('error');
-  if (req.session.user !== undefined) {
-    res.redirect('/');
-  }
   res.render('users/register', {title: 'Noticias-register', messages: errorMessage});
 });
 
-router.post('/register', [
+router.post('/register', isNotAuth, [
   check('firstName')
     .not().isEmpty().withMessage('please enter your first name')
     .isLength({ min: 3, max: 20 }).withMessage('first name must be between 3 and 20 characters')
@@ -125,15 +123,12 @@ router.post('/register', [
   });
 });
 
-router.get('/login', (req, res, next) => {
+router.get('/login', isNotAuth, (req, res, next) => {
   let errorMessage = req.flash('loginError');
-  if (req.session.user !== undefined) {
-    res.redirect('/');
-  }
   res.render('users/login', { title: 'Noticias-login', messages: errorMessage });
 });
 
-router.post('/login', async (req, res, next)=> {
+router.post('/login', isNotAuth, async (req, res, next)=> {
   const user = await User.findOne({ email: req.body.email });
   const loginError = "wrong email or password";
   const nextPage = req.query.next;
