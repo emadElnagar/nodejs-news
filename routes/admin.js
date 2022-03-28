@@ -5,6 +5,7 @@ const User = require('../models/user');
 const Article = require('../models/article');
 const Category = require('../models/category');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
 const { isAdmin } = require('../auth');
 
 router.get('/', isAdmin, (req, res) => {
@@ -81,5 +82,22 @@ router.get('/users', isAdmin, async(req, res) => {
     users: users
   });
 });
+
+router.post('/delete/category/:slug', isAdmin, async(req, res) => {
+  const category = await Category.findOne({ slug: req.params.slug });
+  const path = './public' + category.image;
+  fs.unlink(path, (err) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+  });
+  Category.deleteOne({ _id: category._id }, (err, doc) => {
+    if (err) {
+      console.log(err);
+    }
+    res.redirect('/admin/categories');
+  });
+})
 
 module.exports = router;

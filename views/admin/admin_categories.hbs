@@ -1,7 +1,7 @@
 <section class="py-5">
   <div class="container">
     <div class="d-flex justify-content-start">
-      <a href="#" class="d-flex text-dark btn btn-warning rounded-pill p-1 px-3 text-capitalize">
+      <a href="/articles/create-category" class="d-flex text-dark btn btn-warning rounded-pill p-1 px-3 text-capitalize">
         <span>add</span>
         <span class="material-icons">add</span>
       </a>
@@ -20,17 +20,19 @@
               <tr>
                 <td class="p-2 border border-top-0 d-flex justify-content-between">
                   <div class="d-flex justify-content-center flex-column">
-                    <a href="#">{{this.title}}</a>
+                    <span>{{this.title}}</span>
                   </div>
                   <div>
                     <a href="#" class="d-inline-flex btn btn-warning rounded-pill px-3 ms-2">
                       <span>edit</span>
                       <span class="material-icons ms-1">edit</span>
                     </a>
-                    <a href="#" class="d-inline-flex btn btn-warning rounded-pill px-3">
-                      <span>delete</span>
-                      <span class="material-icons ms-1">delete</span>
-                    </a>
+                    <form class="d-inline-flex" method="post" action="/admin/delete/category/{{this.slug}}">
+                      <button class="d-flex btn btn-warning rounded-pill px-3">
+                        <span>delete</span>
+                        <span class="material-icons ms-1">delete</span>
+                      </button>
+                    </form>
                   </div>
                 </td>
               </tr>
