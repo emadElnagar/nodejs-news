@@ -23,16 +23,60 @@
                     <span>{{this.title}}</span>
                   </div>
                   <div>
-                    <a href="#" class="d-inline-flex btn btn-warning rounded-pill px-3 ms-2">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="d-inline-flex btn btn-warning rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#edit-{{this.title}}">
                       <span>edit</span>
                       <span class="material-icons ms-1">edit</span>
-                    </a>
-                    <form class="d-inline-flex" method="post" action="/admin/delete/category/{{this.slug}}">
-                      <button class="d-flex btn btn-warning rounded-pill px-3">
-                        <span>delete</span>
-                        <span class="material-icons ms-1">delete</span>
-                      </button>
-                    </form>
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="edit-{{this.title}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">update {{this.title}}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body fs-5">
+                            {{this.title}}
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="text-capitalize btn btn-light rounded-pill px-3" data-bs-dismiss="modal">cancel</button>
+                            <form class="d-inline-flex" method="post" action="#">
+                              <button class="text-capitalize btn btn-warning rounded-pill px-3">
+                                update
+                              </button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="d-inline-flex btn btn-danger rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#{{this.title}}">
+                      <span>delete</span>
+                      <span class="material-icons ms-1">delete</span>
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="{{this.title}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">delete confirmation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body fs-5">
+                            are you sure you want to delete category <b>({{this.title}})</b> ?
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="text-capitalize btn btn-light rounded-pill px-3" data-bs-dismiss="modal">cancel</button>
+                            <form class="d-inline-flex" method="post" action="/admin/delete/category/{{this.slug}}">
+                              <button class="text-capitalize btn btn-danger rounded-pill px-3">
+                                delete
+                              </button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </td>
               </tr>
