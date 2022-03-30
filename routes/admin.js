@@ -85,13 +85,6 @@ router.get('/users', isAdmin, async(req, res) => {
 
 router.post('/delete/category/:slug', isAdmin, async(req, res) => {
   const category = await Category.findOne({ slug: req.params.slug });
-  const path = './public' + category.image;
-  fs.unlink(path, (err) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-  });
   Category.deleteOne({ _id: category._id }, (err, doc) => {
     if (err) {
       console.log(err);
@@ -99,5 +92,16 @@ router.post('/delete/category/:slug', isAdmin, async(req, res) => {
     res.redirect('/admin/categories');
   });
 })
+
+router.post('/update/:slug', isAdmin, async(req, res) => {
+  const category = await Category.findOne({ slug: req.params.slug });
+  newCategory = { title: req.body.title };
+  Category.updateOne({ _id: category._id }, { $set: newCategory }, (err, doc) => {
+    if (err) {
+      console.log(err);
+    }
+    res.redirect('/admin/categories');
+  });
+});
 
 module.exports = router;
