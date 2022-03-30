@@ -1,0 +1,107 @@
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-4">
+        <img class="img-fluid border border-5 rounded-circle" src="{{profile.image}}">
+      </div>
+      <div class="col-8">
+        <h1 class="text-capitalize text-center my-4">{{profile.firstName}} {{profile.lastName}}</h1>
+        <h4 class="text-center my-4">email: {{profile.email}}</h4>
+        <h4 class="text-capitalize text-center my-4">joined at: {{profile.createdAt}}</h4>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{#unless profile.isAdmin}}
+  <section class="py-5">
+    <div class="container">
+      <h2 class="text-capitalize text-center">user management</h2>
+      <div class="row">
+        <div class="col-12">
+          <div class="d-flex justify-content-center my-4">
+            <!-- Button trigger modal -->
+            <button type="button" class="d-inline-flex btn btn-danger me-3 text-capitalize px-3" data-bs-toggle="modal"
+              data-bs-target="#delete-{{profile.id}}">
+              <span>delete this user</span>
+              <span class="material-icons ms-1">delete</span>
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="delete-{{profile.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">delete user</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body fs-5 text-center">
+                    are you sure you want to delete this user <b class="d-block text-capitalize">({{profile.firstName}} {{profile.lastName}})</b>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">cancel</button>
+                    <form method="post" action="/admin/delete/{{profile.id}}">
+                      <input type="submit" class="btn btn-danger rounded-pill px-3" value="delete">
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {{#if profile.isModerator}}
+              <!-- Button trigger modal -->
+              <button type="button" class="d-inline-flex btn btn-danger me-3 text-capitalize px-3" data-bs-toggle="modal"
+                data-bs-target="#isolate-{{profile.id}}">
+                <span>isolate moderator</span>
+              </button>
+              <!-- Modal -->
+              <div class="modal fade" id="isolate-{{profile.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">create moderator</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body fs-5 text-center">
+                      are you sure you want to make user moderator <b class="d-block text-capitalize">({{profile.firstName}} {{profile.lastName}})</b>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-light px-3" data-bs-dismiss="modal">cancel</button>
+                      <form method="post" action="/admin/isolate-moderator/{{profile.id}}">
+                        <input type="submit" class="btn btn-danger text-capitalize" value="isolate">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {{else}}  
+              <!-- Button trigger modal -->
+              <button type="button" class="d-inline-flex btn btn-info me-3 text-capitalize px-3" data-bs-toggle="modal"
+                data-bs-target="#moderate-{{profile.id}}">
+                <span>create moderator</span>
+              </button>
+              <!-- Modal -->
+              <div class="modal fade" id="moderate-{{profile.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">create moderator</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body fs-5 text-center">
+                      are you sure you want to make user moderator <b class="d-block text-capitalize">({{profile.firstName}} {{profile.lastName}})</b>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">cancel</button>
+                      <form method="post" action="/admin/create-moderator/{{profile.id}}">
+                        <input type="submit" class="btn btn-info text-capitalize" value="create">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{{/unless}}

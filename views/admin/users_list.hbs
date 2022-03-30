@@ -10,8 +10,9 @@
     <table class="w-100 text-capitalize">
       <thead>
         <tr class="bg-warning border border-1">
-          <th class="p-2">title</th>
-          <th class="p-2">isAdmin</th>
+          <th class="p-2 text-center">name</th>
+          <th class="p-2 text-center">is admin</th>
+          <th class="p-2 text-center">is moderator</th>
           <th class="p-2 text-center">manage user</th>
           <th class="p-2 text-center">delete user</th>
         </tr>
@@ -21,23 +22,59 @@
           {{#each this}}
             {{#if this.email}}
               <tr>
-                <td class="p-2 border border-top-0">
-                  <a href="#">{{this.firstName}} {{this.lastName}}</a>
-                </td>
-                <td class="p-2 border border-top-0">
-                  {{this.isAdmin}}
+                <td class="p-2 border border-top-0 text-center">
+                  <a href="/users/profile/{{this._id}}">{{this.firstName}} {{this.lastName}}</a>
                 </td>
                 <td class="p-2 border border-top-0 text-center">
-                  <a href="#" class="d-inline-flex btn btn-warning rounded-pill px-3 ms-2">
+                  <span class="py-2 w-50 badge rounded-pill {{#if this.isAdmin}}bg-success{{else}}bg-danger{{/if}}">
+                    {{#if this.isAdmin}}
+                      admin
+                    {{else}}
+                      not admin
+                    {{/if}}
+                  </span>
+                </td>
+                <td class="p-2 border border-top-0 text-center">
+                  <span class="py-2 w-50 badge rounded-pill {{#if this.isModerator}}bg-success{{else}}bg-danger{{/if}}">
+                    {{#if this.isModerator}}
+                      moderator
+                    {{else}}
+                      not moderator
+                    {{/if}}
+                  </span>
+                </td>
+                <td class="p-2 border border-top-0 text-center">
+                  <a href="/admin/manage/user/{{this._id}}" class="d-inline-flex btn btn-warning rounded-pill px-3 ms-2">
                     <span>manage</span>
                     <span class="material-icons ms-1">manage_accounts</span>
                   </a>
                 </td>
                 <td class="p-2 border border-top-0 text-center">
-                  <a href="#" class="d-inline-flex btn btn-warning rounded-pill px-3">
+                  <!-- Button trigger modal -->
+                  <button type="button" class="d-inline-flex btn btn-danger rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#delete-{{this._id}}">
                     <span>delete</span>
                     <span class="material-icons ms-1">delete</span>
-                  </a>
+                  </button>
+                  <!-- Modal -->
+                  <div class="modal fade" id="delete-{{this._id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body fs-5">
+                          are you sure you want to delete this user <b class="d-block">({{this.firstName}} {{this.lastName}})</b>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">cancel</button>
+                          <form method="post" action="delete/{{this._id}}">
+                            <input type="submit" class="btn btn-danger rounded-pill px-3" value="delete">
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </td>
               </tr>
             {{/if}}

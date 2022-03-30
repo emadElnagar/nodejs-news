@@ -8,7 +8,8 @@ const userSchema = mongoose.Schema({
   password: { type: String, required: true },
   gender: { type: String },
   profileImg: { type: String, default: '/images/default-user-image.png' },
-  isAdmin: { type: Boolean, required: true, default: false }
+  isAdmin: { type: Boolean, required: true, default: false },
+  isModerator: { type: Boolean, required: true, default: false }
 }, {
   timestamps: true,
 });
