@@ -1,2 +1,98 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+<main>
+  <section class="pt-5">
+    <div class="container">
+      <div class="row">
+        <div>
+          <h4 class="text-capitalize p-2 bg-warning">latest news</h4>
+        </div>
+        {{#each lastArticles}}
+          {{#each this}}
+            {{#if this.image}}
+              <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <a class="text-light" href="/articles/{{this.slug}}">
+                  <div class="card shadow position-relative">
+                    <img
+                      src="{{this.image}}"
+                      class="card-img-top" 
+                      alt="oops! it's problem showing your photo"
+                    >
+                    <span class="position-absolute top-0 left-0 m-4 px-3 badge rounded-pill bg-warning text-dark">{{this.category}}</span>
+                    <div class="card-body position-absolute w-100 h-100 bg-transparent d-flex flex-column justify-content-end align-items-center">
+                      <h2 class="text-capitalize">{{this.title}}</h2>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            {{/if}}
+          {{/each}}
+        {{/each}}
+      </div>
+    </div>
+  </section>
+
+  {{#if sportArticles}}
+    <section class="pt-5">
+      <div class="container">
+        <div class="row">
+          <div>
+            <h4 class="text-capitalize p-2 bg-warning">sport news</h4>
+          </div>
+          {{#each sportArticles}}
+            {{#each this}}
+              {{#if this.image}}
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                  <a class="text-light" href="/articles/{{this.slug}}">
+                    <div class="card shadow position-relative">
+                      <img
+                        src="{{this.image}}"
+                        class="card-img-top" 
+                        alt="oops! it's problem showing your photo"
+                      >
+                      <span class="position-absolute top-0 left-0 m-4 px-3 badge rounded-pill bg-warning text-dark">{{this.category}}</span>
+                      <div class="card-body position-absolute w-100 h-100 bg-transparent d-flex flex-column justify-content-end align-items-center">
+                        <h2 class="text-capitalize">{{this.title}}</h2>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              {{/if}}
+            {{/each}}
+          {{/each}}
+        </div>
+      </div>
+    </section>
+  {{/if}}
+
+  {{#if fashionArticles}}
+    <section class="py-5">
+      <div class="container">
+        <div class="row">
+          <div>
+            <h4 class="text-capitalize p-2 bg-warning">sport news</h4>
+          </div>
+          {{#each fashionArticles}}
+            {{#each this}}
+              {{#if this.image}}
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                  <a class="text-light" href="/articles/{{this.slug}}">
+                    <div class="card shadow position-relative">
+                      <img
+                        src="{{this.image}}"
+                        class="card-img-top" 
+                        alt="oops! it's problem showing your photo"
+                      >
+                      <span class="position-absolute top-0 left-0 m-4 px-3 badge rounded-pill bg-warning text-dark">{{this.category}}</span>
+                      <div class="card-body position-absolute w-100 h-100 bg-transparent d-flex flex-column justify-content-end align-items-center">
+                        <h2 class="text-capitalize">{{this.title}}</h2>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              {{/if}}
+            {{/each}}
+          {{/each}}
+        </div>
+      </div>
+    </section>
+  {{/if}}
+</main>
