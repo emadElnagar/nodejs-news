@@ -16,4 +16,14 @@ router.get('/', async(req, res) => {
   });
 });
 
+router.get('/search', async(req, res) => {
+  const { search } = req.query;
+  const searchedArticles = await article.find({ title: search });
+  if (searchedArticles.length === 0) {
+    res.render('search/not-found', { title: 'Noticias', user: req.session.user });
+  } else {
+    res.render('search/search', { title: 'Noticias', user: req.session.user, articles: searchedArticles });
+  }
+});
+
 module.exports = router;
