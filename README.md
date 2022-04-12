@@ -1,5 +1,5 @@
 # nodejs-news
-A news app created with nodejs, Express and mongodb
+A news app where user can watch articles and take some actions like comment
 ## Technologies
 * HTML
 * CSS
@@ -8,4 +8,8 @@ A news app created with nodejs, Express and mongodb
 * NodeJS
 * ExpressJS
 * MongoDB
-* and more 
+* and more
+## Features
+* User can watch news articles
+* User can comment on articles
+* User can search by category or article title
