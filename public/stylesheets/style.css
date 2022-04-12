@@ -113,3 +113,7 @@ input[type="file"]:focus {
   border-top: 1px solid #aaa;
   height: 22%;
 }
+
+footer li a {
+  transition: all .3s ease;
+}
