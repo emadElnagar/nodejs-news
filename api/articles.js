@@ -26,4 +26,27 @@ router.get('/:slug', async(req, res) => {
   }
 });
 
+router.post('/:slug', async(erq, res) => {
+  const article = await Article.findOne({ slug: req.params.slug });
+  const comment = new Comment({
+    user: {
+      id: req.session.user._id,
+      firstName: req.session.user.firstName,
+      lastName: req.session.user.lastName,
+      image: req.session.user.image
+    },
+    article: article,
+    content: req.body.comment
+  });
+  comment.save().then(result => {
+    res.status(200).json({
+      message: "Error" + error.message
+    })
+  }).catch(error => {
+    res.status(401).json({
+      message: "Error" + error.message
+    })
+  })
+});
+
 module.exports = router;
