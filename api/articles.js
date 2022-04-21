@@ -4,6 +4,7 @@ var router = express.Router();
 const slugify = require('slugify');
 const Category = require('../models/category');
 const Article = require('../models/article');
+const Comment = require('../models/comment');
 
 router.get('/', async(req, res) => {
   try {
@@ -16,8 +17,10 @@ router.get('/', async(req, res) => {
 
 router.get('/:slug', async(req, res) => {
   const article = await Article.findOne({ slug: req.params.slug });
-  if(article) {
-    res.send(article);
+  const comments = await Comment.find({ article: article }).sort('-createdAt');
+  const relatedArticles = await Article.find({ category: article.category, slug: { $ne: article.slug } }, { title: 1, image: 1, slug: 1 } ).sort('-updatedAt').limit(4);
+  if (article) {
+    res.send({article, comments, relatedArticles});
   } else {
     res.status(404).send({message: 'Article not found'});
   }
