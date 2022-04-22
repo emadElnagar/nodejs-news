@@ -20,12 +20,30 @@ router.get('/', async(req, res) => {
 // CREATE CATEGORY
 router.post('/create-category', isAuth, isAdmin, (req, res) => {
   const category = new Category({
-    title: req.body.title
-  });
-  category.save().then(result => {
-    res.status(200).json({
-      message: 'Article Created'
+    title: req.body.title,
+    author: req.session.user,
+    slug: slugify(req.body.title, {
+      replacement: '-',
+      lower: true,
+      strict: true,
     })
+  });
+  Category.findOne({ title: req.body.title }).then( result => {
+    if (result) {
+      category.save().then(result => {
+        res.status(200).json({
+          message: "Category Created"
+        })
+      }).catch(error => {
+        res.status(401).json({
+          message: 'Error' + error.message
+        });
+      });
+    } else {
+      res.status(402).json({
+        message: "Category is already defined try another one"
+      })
+    }
   }).catch(error => {
     res.status(401).json({
       message: 'Error' + error.message
