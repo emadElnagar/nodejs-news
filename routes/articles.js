@@ -167,16 +167,11 @@ router.post('/new', isAuth, isAdmin, [
   });
 });
 
-router.get('/update/:slug', async(req, res, next) => {
+router.get('/update/:slug', isAuth, isAdmin, async(req, res, next) => {
   const article = await Article.findOne({ slug: req.params.slug });
   const category = await Category.find({});
   const errorMessage = req.flash('error');
   const imageErrorMessage = req.flash('profileError');
-  if (req.session.user === undefined) {
-    res.redirect('/');
-  } else if (req.session.user.isAdmin === false) {
-    res.redirect('/');
-  }
   if (!article) {
     res.render('404', { user: req.session.user, title: 'Noticias-article' });
   } else {
@@ -206,7 +201,7 @@ router.get('/update/:slug', async(req, res, next) => {
   }
 });
 
-router.post('/update/:slug', [
+router.post('/update/:slug', isAuth, isAdmin, [
   check('title')
     .not().isEmpty().withMessage('please enter the article title'),
   check('subject')
@@ -243,7 +238,7 @@ router.post('/update/:slug', [
   });
 });
 
-router.post('/delete/:slug', async(req, res, next) => {
+router.post('/delete/:slug', isAuth, isAdmin, async(req, res, next) => {
   const article = await Article.findOne({ slug: req.params.slug });
   const path = './public' + article.image;
   fs.unlink(path, (err) => {
