@@ -56,16 +56,10 @@ router.get('/', async(req, res, next) => {
 
 router.get('/create-category', isAuth, isAdmin, (req, res, next) => {
   let errorMessage = req.flash('error');
-  if (req.session.user === undefined) {
-    res.redirect('/');
-  }
-  if (req.session.user.isAdmin === false) {
-    res.redirect('/');
-  }
-  context = { 
-    title: 'Noticias-new-category', 
-    user: req.session.user, 
-    messages: errorMessage 
+  context = {
+    title: 'Noticias-new-category',
+    user: req.session.user,
+    messages: errorMessage
   }
   res.render('articles/new_category', context);
 });
@@ -122,7 +116,7 @@ router.get('/new', isAuth, isAdmin, async(req, res, next) => {
   } else if (req.session.user.isAdmin === false) {
     res.redirect('/');
   }
-  context = { 
+  context = {
     title: 'Noticias-new-article',
     user: req.session.user,
     categories: category,

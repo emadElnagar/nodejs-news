@@ -5,7 +5,9 @@ const slugify = require('slugify');
 const Category = require('../models/category');
 const Article = require('../models/article');
 const Comment = require('../models/comment');
+const { isAuth, isAdmin } = require('../auth');
 
+// ARTICLES LIST
 router.get('/', async(req, res) => {
   try {
     const articles = await Article.find({}).sort('-updatedAt');
@@ -15,6 +17,23 @@ router.get('/', async(req, res) => {
   }
 });
 
+// CREATE CATEGORY
+router.post('/create-category', isAuth, isAdmin, (req, res) => {
+  const category = new Category({
+    title: req.body.title
+  });
+  category.save().then(result => {
+    res.status(200).json({
+      message: 'Article Created'
+    })
+  }).catch(error => {
+    res.status(401).json({
+      message: 'Error' + error.message
+    });
+  });
+});
+
+// ARTICLE DETAILS
 router.get('/:slug', async(req, res) => {
   const article = await Article.findOne({ slug: req.params.slug });
   const comments = await Comment.find({ article: article }).sort('-createdAt');
@@ -26,7 +45,8 @@ router.get('/:slug', async(req, res) => {
   }
 });
 
-router.post('/:slug', async(erq, res) => {
+// CREATE COMMENT
+router.post('/:slug', isAuth, async(erq, res) => {
   const article = await Article.findOne({ slug: req.params.slug });
   const comment = new Comment({
     user: {
@@ -40,7 +60,7 @@ router.post('/:slug', async(erq, res) => {
   });
   comment.save().then(result => {
     res.status(200).json({
-      message: "Error" + error.message
+      message: "Created Successfuly"
     })
   }).catch(error => {
     res.status(401).json({
