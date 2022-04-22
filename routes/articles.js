@@ -111,11 +111,6 @@ router.get('/new', isAuth, isAdmin, async(req, res, next) => {
   let errorMessage = req.flash('error');
   const category = await Category.find({});
   const imageErrorMessage = req.flash('profileError');
-  if (req.session.user === undefined) {
-    res.redirect('/');
-  } else if (req.session.user.isAdmin === false) {
-    res.redirect('/');
-  }
   context = {
     title: 'Noticias-new-article',
     user: req.session.user,

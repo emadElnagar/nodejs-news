@@ -29,7 +29,7 @@ router.post('/create-category', isAuth, isAdmin, (req, res) => {
     })
   });
   Category.findOne({ title: req.body.title }).then( result => {
-    if (result) {
+    if (result.length < 1) {
       category.save().then(result => {
         res.status(200).json({
           message: "Category Created"
@@ -43,6 +43,49 @@ router.post('/create-category', isAuth, isAdmin, (req, res) => {
       res.status(402).json({
         message: "Category is already defined try another one"
       })
+    }
+  }).catch(error => {
+    res.status(401).json({
+      message: 'Error' + error.message
+    });
+  });
+});
+
+// GET CREATE ARTICLE PAGE
+router.get('/new', async(req, res) => {
+  const categories = await Category.find({});
+  res.send(categories);
+});
+
+// CREAET NEW ARTICLE
+router.post('/new', (req, res) => {
+  const article = new Article({
+    title: req.body.title,
+    subject: req.body.subject,
+    image: (req.file.path).slice(6),
+    category: req.body.category,
+    author: req.session.user,
+    slug: slugify(req.body.title, {
+      replacement: '-',
+      lower: true,
+      strict: true,
+    })
+  });
+  Article.findOne({ title: req.body.title }).then(result => {
+    if (result.length < 1) {
+      article.save().then(result => {
+        res.status(200).json({
+          message: 'Error' + error.message
+        })
+      }).catch(error => {
+        res.status(401).json({
+          message: 'Error' + error.message
+        })
+      });
+    } else {
+      res.status(402).json({
+        message: 'this title is already exist try to change it'
+      });
     }
   }).catch(error => {
     res.status(401).json({
