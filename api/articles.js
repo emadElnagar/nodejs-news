@@ -5,7 +5,43 @@ const slugify = require('slugify');
 const Category = require('../models/category');
 const Article = require('../models/article');
 const Comment = require('../models/comment');
+const multer = require('multer');
 const { isAuth, isAdmin } = require('../auth');
+
+const fileFilter = function(req, file, cb) {
+  if (file.mimetype !== 'image/png') {
+    cb(null, true)
+  } else if (file.mimetype !== 'image/jpg') {
+    cb(null, true)
+  } else {
+    cb(new Error('please enter jpg or png image'), false)
+  }
+}
+
+const storage = multer.diskStorage({
+  destination:  function(req, file, cb) {
+    cb(null, './public/media/articles')
+  },
+  filename: function(req, file, cb) {
+    cb(null, new Date().toDateString() + file.originalname)
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024*1024*5
+  },
+  fileFilter: fileFilter
+});
+
+router.use(upload.single('image'), (err, req, res, next) => {
+  if (err) {
+    res.status(400).json({
+      message: error.message
+    })
+  }
+});
 
 // ARTICLES LIST
 router.get('/', async(req, res) => {
