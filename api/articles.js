@@ -6,6 +6,7 @@ const Category = require('../models/category');
 const Article = require('../models/article');
 const Comment = require('../models/comment');
 const multer = require('multer');
+const fs = require('fs');
 const { isAuth, isAdmin } = require('../auth');
 
 const fileFilter = function(req, file, cb) {
@@ -189,6 +190,27 @@ router.post('/update/:slug', async(req, res) => {
   }).catch(error => {
     res.status(401).json({
       message: error.message
+    });
+  });
+});
+
+// DELETE ARTICLE
+router.post('/delete/:slug', isAuth, isAdmin, async(req, res, next) => {
+  const article = await Article.findOne({ slug: req.params.slug });
+  const path = './public' + article.image;
+  fs.unlink(path, (err) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+  });
+  Article.deleteOne({ _id: article._id }).then(result => {
+    res.status(200).json({
+      message: 'Article deleted successfuly'
+    })
+  }).catch(error => {
+    res.status(401).json({
+      message: 'Error' + error.message
     });
   });
 });
