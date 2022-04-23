@@ -94,6 +94,24 @@ router.post('/new', (req, res) => {
   });
 });
 
+// GET UPDATE ARTICLE PAGE
+router.get('/update/:slug', async(req, res) => {
+  const categories = await Category.find({});
+  const article = await Article.findOne({ slug: req.params.slug }).then(result => {
+    if (result) {
+      res.send(categories);
+    } else {
+      res.status(404).json({
+        message: 'Article Not Found'
+      })
+    }
+  }).catch(error => {
+    res.status(401).json({
+      message: error.message
+    });
+  });
+});
+
 // ARTICLE DETAILS
 router.get('/:slug', async(req, res) => {
   const article = await Article.findOne({ slug: req.params.slug });
