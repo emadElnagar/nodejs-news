@@ -131,11 +131,56 @@ router.post('/new', (req, res) => {
 });
 
 // GET UPDATE ARTICLE PAGE
-router.get('/update/:slug', async(req, res) => {
+router.get('/update/:slug', isAuth, isAdmin, async(req, res) => {
   const categories = await Category.find({});
   const article = await Article.findOne({ slug: req.params.slug }).then(result => {
     if (result) {
       res.send(categories);
+    } else {
+      res.status(404).json({
+        message: 'Article Not Found'
+      })
+    }
+  }).catch(error => {
+    res.status(401).json({
+      message: error.message
+    });
+  });
+});
+
+// UPDATE ARTICLE
+router.post('/update/:slug', async(req, res) => {
+  const categories = await Category.find({});
+  const article = await Article.findOne({ slug: req.params.slug }).then(result => {
+    if (result) {
+      const updatedArticle = {
+        title: req.body.title,
+        subject: req.body.subject,
+        image: (req.file.path).slice(6) || article.image,
+        slug: slugify(req.body.title, {
+          replacement: '-',
+          lower: true,
+          strict: true,
+        })
+      }
+      if (req.file.path) {
+        const path = './public' + article.image;
+        fs.unlink(path, (err) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+        })
+      }
+      Article.updateOne({ _id: article._id }, { $set: updatedArticle }).then(result => {
+        res.status(200).json({
+          message: 'Article updated successfuly'
+        })
+      }).catch(error => {
+        res.status(401).json({
+          message: 'Error' + error.message
+        })
+      })
     } else {
       res.status(404).json({
         message: 'Article Not Found'
