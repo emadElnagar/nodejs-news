@@ -83,32 +83,15 @@
             {{#each comments}}
               {{#each this}}
                 {{#if this.content}}
-                  <div class="d-flex justify-content-between">
-                    <div>
-                      <a href="/users/profile/{{this.user.id}}" class="text-capitalize">
-                        <img src="{{this.user.image}}" style="height: 30px; width: 30px;" class="rounded-circle mx-1"
-                          alt="problem showing photo">
-                        <b>{{this.user.firstName}} {{this.user.lastName}}</b>
-                      </a>
-                      <p class="ps-5">{{this.content}}</p>
-                    </div>
-                    <div class="dropdown">
-                      <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                      </a>
-
-                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
-                        <li><a class="dropdown-item d-flex justify-content-between" href="#">
-                          <span>edit</span>
-                          <span class="material-icons">edit</span>
-                        </a></li>
-                        <li><a class="dropdown-item d-flex justify-content-between" href="#">
-                          <span>delete</span>
-                          <span class="material-icons">delete</span>
-                        </a></li>
-                      </ul>
-                    </div>
+                  <div>
+                    <a href="/users/profile/{{this.user.id}}" class="text-capitalize">
+                      <img src="{{this.user.image}}" style="height: 30px; width: 30px;" class="rounded-circle mx-1"
+                        alt="problem showing photo">
+                      <b>{{this.user.firstName}} {{this.user.lastName}}</b>
+                    </a>
+                    <p class="ps-5">{{this.content}}</p>
+                    <hr>
                   </div>
-                  <hr>
                 {{/if}}
               {{/each}}
             {{/each}}
