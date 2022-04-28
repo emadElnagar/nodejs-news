@@ -102,13 +102,28 @@ router.post('/profile-img-upload', isAuth, async(req, res, next) => {
       })
     })
   }
-  User.updateOne({ _id: req.session.user._id }).then(result => {
+  User.updateOne({ _id: req.session.user._id }, { $set: newUser }).then(result => {
     res.status(200).json({
       message: 'Image changed successfully'
     })
   }).catch(error => {
     res.status(401).json({
       message: 'Error' + error.message
+    });
+  });
+});
+
+// EDIT USER NAME
+router.post('/edit-username', isAuth, (req, res) => {
+  const user = req.session.user;
+  const newUser = { firstName: req.body.firstName, lastName: req.body.lastName };
+  User.updateOne({ _id: req.session.user._id }, { $set: newUser }).then(result => {
+    res.status(200).json({
+      message: 'User name edited successfully'
+    })
+  }).catch(error => {
+    res.status(401).json({
+      message: 'Error' + message.error
     });
   });
 });
