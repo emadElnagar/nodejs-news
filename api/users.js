@@ -128,4 +128,19 @@ router.post('/edit-username', isAuth, (req, res) => {
   });
 });
 
+// CHANGE USER EMAIL
+router.post('/change-email', isAuth, (req, res) => {
+  const user = req.session.user;
+  const newUser = { email: req.body.email };
+  User.updateOne({ _id: req.session.user._id }, { $set: newUser }).then(result => {
+    res.status(200).json({
+      message: 'Email updated successfully'
+    })
+  }).catch(error => {
+    res.status(401).json({
+      message: 'Error' + message.error
+    });
+  });
+}) ;
+
 module.exports = router;
