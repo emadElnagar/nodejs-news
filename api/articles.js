@@ -7,7 +7,7 @@ const Article = require('../models/article');
 const Comment = require('../models/comment');
 const multer = require('multer');
 const fs = require('fs');
-const { isAuth, isAdmin } = require('../auth');
+const { isAuth, isAdmin } = require('../authAPI');
 
 const fileFilter = function(req, file, cb) {
   if (file.mimetype !== 'image/png') {
@@ -55,10 +55,11 @@ router.get('/', async(req, res) => {
 });
 
 // CREATE CATEGORY
-router.post('/create-category', isAuth, isAdmin, (req, res) => {
+router.post('/create-category', isAuth, isAdmin, async(req, res) => {
+  const user = await User.findById(req.user._id);
   const category = new Category({
     title: req.body.title,
-    author: req.session.user,
+    author: user,
     slug: slugify(req.body.title, {
       replacement: '-',
       lower: true,
@@ -95,13 +96,14 @@ router.get('/new', async(req, res) => {
 });
 
 // CREAET NEW ARTICLE
-router.post('/new', (req, res) => {
+router.post('/new', async(req, res) => {
+  const user = await User.findById(req.user._id);
   const article = new Article({
     title: req.body.title,
     subject: req.body.subject,
     image: (req.file.path).slice(6),
     category: req.body.category,
-    author: req.session.user,
+    author: user,
     slug: slugify(req.body.title, {
       replacement: '-',
       lower: true,
@@ -230,12 +232,13 @@ router.get('/:slug', async(req, res) => {
 // CREATE COMMENT
 router.post('/:slug', isAuth, async(erq, res) => {
   const article = await Article.findOne({ slug: req.params.slug });
+  const user = await User.findById(req.user._id);
   const comment = new Comment({
     user: {
-      id: req.session.user._id,
-      firstName: req.session.user.firstName,
-      lastName: req.session.user.lastName,
-      image: req.session.user.image
+      id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      image: user.image
     },
     article: article,
     content: req.body.comment

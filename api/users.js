@@ -42,8 +42,28 @@ router.use(upload.single('image'), (err, req, res, next) => {
 });
 
 // USER LOGIN
-userRouter.post('/login', expressAsyncHandler(async(req, res) => {
-  const user = await User.findOne({email: req.body.email});
+router.post('/login', async(req, res) => {
+  const user = await User.findOne({email: req.body.email}).then(result => {
+    if (result) {
+      if (bcrypt.compare(req.body.password, user.password)) {
+        res.send({
+          _id: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          isAdmin: user.isAdmin,
+          token: generateToken(user),
+        });
+        return;
+      }
+    } else {
+      res.status(401).send({message: 'invalid email or password'})
+    }
+  }).catch(error => {
+    res.status(401).json({
+      message: 'Error' + error.message
+    })
+  })
   if (user){
     if (bcrypt.compare(req.body.password, user.password)) {
       res.send({
@@ -57,8 +77,7 @@ userRouter.post('/login', expressAsyncHandler(async(req, res) => {
       return;
     }
   }
-  res.status(401).send({message: 'invalid email or password'})
-}));
+});
 
 // USER REGISTER
 router.post('/register', isNotAuth, (req, res) => {
@@ -141,7 +160,7 @@ router.post('/profile-img-upload', isAuth, async(req, res, next) => {
 });
 
 // EDIT USER NAME
-router.put('/edit-username', isAuth, (req, res) => {
+router.put('/edit-username', isAuth, async(req, res) => {
   const user = await User.findById(req.user._id);
   const newUser = { firstName: req.body.firstName, lastName: req.body.lastName };
   User.updateOne({ _id: req.session.user._id }, { $set: newUser }).then(result => {
@@ -156,7 +175,7 @@ router.put('/edit-username', isAuth, (req, res) => {
 });
 
 // CHANGE USER EMAIL
-router.put('/change-email', isAuth, (req, res) => {
+router.put('/change-email', isAuth, async(req, res) => {
   const user = await User.findById(req.user._id);
   const newUser = { email: req.body.email };
   User.updateOne({ _id: req.session.user._id }, { $set: newUser }).then(result => {

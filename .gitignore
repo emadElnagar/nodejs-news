@@ -1,4 +1,5 @@
 node_modules/
-media/
+*.jpg
+*.png
 yarn.lock
 .env
