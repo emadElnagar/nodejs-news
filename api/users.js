@@ -123,7 +123,7 @@ router.post('/edit-username', isAuth, (req, res) => {
     })
   }).catch(error => {
     res.status(401).json({
-      message: 'Error' + message.error
+      message: 'Error' + error.message
     });
   });
 });
@@ -138,9 +138,27 @@ router.post('/change-email', isAuth, (req, res) => {
     })
   }).catch(error => {
     res.status(401).json({
-      message: 'Error' + message.error
+      message: 'Error' + error.message
     });
   });
-}) ;
+});
+
+// CHANGE USER PASSWORD
+router.post('/change-password', isAuth, async(req, res) => {
+  const user = req.session.user;
+  const profile = await User.findOne({ email: user.email });
+  const validate = await bcrypt.compare(req.body.currentPassword, profile.password);
+  if (!validate) {
+    res.status(401).json({
+      message: 'Current password is not correct'
+    })
+  }
+  const newUser = { password: new User().hashPassword(req.body.newPassword) };
+  User.updateOne({ _id: req.session.user._id }, {  $set: newUser }).then().catch(error => {
+    res.status(401).json({
+      message: 'Error' + error.message
+    });
+  });
+});
 
 module.exports = router;
