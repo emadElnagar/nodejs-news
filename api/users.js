@@ -148,7 +148,7 @@ router.post('/profile-img-upload', isAuth, async(req, res, next) => {
       })
     })
   }
-  User.updateOne({ _id: req.session.user._id }, { $set: newUser }).then(result => {
+  User.updateOne({ _id: user.id }, { $set: newUser }).then(result => {
     res.status(200).json({
       message: 'Image changed successfully'
     })
@@ -163,7 +163,7 @@ router.post('/profile-img-upload', isAuth, async(req, res, next) => {
 router.put('/edit-username', isAuth, async(req, res) => {
   const user = await User.findById(req.user._id);
   const newUser = { firstName: req.body.firstName, lastName: req.body.lastName };
-  User.updateOne({ _id: req.session.user._id }, { $set: newUser }).then(result => {
+  User.updateOne({ _id: user.id }, { $set: newUser }).then(result => {
     res.status(200).json({
       message: 'User name edited successfully'
     })
@@ -178,7 +178,7 @@ router.put('/edit-username', isAuth, async(req, res) => {
 router.put('/change-email', isAuth, async(req, res) => {
   const user = await User.findById(req.user._id);
   const newUser = { email: req.body.email };
-  User.updateOne({ _id: req.session.user._id }, { $set: newUser }).then(result => {
+  User.updateOne({ _id: user.id }, { $set: newUser }).then(result => {
     res.status(200).json({
       message: 'Email updated successfully'
     })
@@ -200,7 +200,33 @@ router.put('/change-password', isAuth, async(req, res) => {
     })
   }
   const newUser = { password: new User().hashPassword(req.body.newPassword) };
-  User.updateOne({ _id: req.session.user._id }, {  $set: newUser }).then().catch(error => {
+  User.updateOne({ _id: user.id }, {  $set: newUser }).then().catch(error => {
+    res.status(401).json({
+      message: 'Error' + error.message
+    });
+  });
+});
+
+// DELETE USER ACCOUNT
+router.delete('/delete-account', isAuth, async(req, res) => {
+  const profile = await User.findById(req.user._id);
+  const path = './public' + profile.profileImg;
+  if (profile.profileImg !== '/images/default-user-image.png') {
+    fs.unlink(path).then(result => {
+      res.status(200).json({
+        message: 'Success'
+      })
+    }).catch(
+      res.status(401).json({
+        message: 'Error' + error.message
+      })
+    )
+  }
+  User.deleteOne({ _id: req.user._id }).then(result => {
+    res.status(200).json({
+      message: 'Account deleted successfully'
+    })
+  }).catch(error => {
     res.status(401).json({
       message: 'Error' + error.message
     });
