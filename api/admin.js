@@ -55,4 +55,10 @@ router.get('/users', isAdmin, async(req, res) => {
   res.send(users);
 });
 
+// GET MANAGE USER PAGE
+router.get('/manage/user/:id', isAdmin, async(req, res) => {
+  const profile = await User.findById(req.params.id);
+  res.send(profile);
+});
+
 module.exports = router;
