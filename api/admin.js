@@ -84,4 +84,28 @@ router.delete('/delete/category/:slug', isAdmin, async(req, res) => {
   });
 });
 
+// UPDATE CATEGORY
+router.put('/update/:slug', isAdmin, async(req, res) => {
+  const category = await Category.findOne({ slug: req.params.slug }).then(category => {
+    if (category) {
+      newCategory = { title: req.body.title };
+      Category.updateOne({ _id: category._id }, { $set: newCategory }).then(result => {
+        res.status(200).json({
+          message: 'Categroy updated successfully'
+        });
+      }).catch(error => {
+        res.status(401).json({
+          message: 'Error' + error.message
+        });
+      });
+    } else {
+      res.send('Category Not Found');
+    }
+  }).catch(error => {
+    res.status(401).json({
+      message: 'Error' + error.message
+    });
+  });
+});
+
 module.exports = router;
