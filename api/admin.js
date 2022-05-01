@@ -168,4 +168,29 @@ router.put('/create-moderator/:id', isAdmin, async(req, res) => {
   });
 });
 
+// ISOLATE MODERATOR
+router.put('/isolate-moderator/:id', isAdmin, async(req, res) => {
+  const user = await User.findById(req.params.id).then(user => {
+    if (user) {
+      User.updateOne({ _id: user._id }, { $set: { isModerator: false } }).then(result => {
+        res.status(200).json({
+          message: 'Moderator isolated successfully'
+        });
+      }).catch(error => {
+        res.status(401).json({
+          message: 'Error' + error.message
+        });
+      });
+    } else {
+      res.status(404).json({
+        message: 'User Not Found'
+      })
+    }
+  }).catch(error => {
+    res.status(401).json({
+      message: 'Error' + error.message
+    });
+  });
+});
+
 module.exports = router;
