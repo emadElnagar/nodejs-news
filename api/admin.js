@@ -61,4 +61,27 @@ router.get('/manage/user/:id', isAdmin, async(req, res) => {
   res.send(profile);
 });
 
+// DELETE CATEGORY
+router.delete('/delete/category/:slug', isAdmin, async(req, res) => {
+  const category = await Category.findOne({ slug: req.params.slug }).then(category => {
+    if (category) {
+      Category.deleteOne({ _id: category._id }).then(result => {
+        res.status(200).json({
+          message: 'Category deleted successfully'
+        });
+      }).catch(error => {
+        res.status(401).json({
+          message: 'Error' + error.message
+        });
+      });
+    } else {
+      res.send('Categroy Not Found');
+    }
+  }).catch(error => {
+    res.status(401).json({
+      message: 'Error' + error.message
+    });
+  });
+});
+
 module.exports = router;
