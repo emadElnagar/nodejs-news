@@ -143,4 +143,29 @@ router.delete('/delete/:id', isAdmin, async(req, res) => {
   });
 });
 
+// CREATE MODERATOR USER
+router.put('/create-moderator/:id', isAdmin, async(req, res) => {
+  const user = await User.findById(req.params.id).then(user => {
+    if (user) {
+      User.updateOne({ _id: user._id }, { $set: { isModerator: true } }).then(result => {
+        res.status(200).json({
+          message: 'This user is a moderator now'
+        });
+      }).catch(error => {
+        res.status(401).json({
+          message: 'Error' + error.message
+        });
+      });
+    } else {
+      res.status(404).json({
+        message: 'User Not Found'
+      });
+    }
+  }).catch(error => {
+    res.status(401).json({
+      message: 'Error' + error.message
+    });
+  });
+});
+
 module.exports = router;
