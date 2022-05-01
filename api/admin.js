@@ -5,6 +5,7 @@ const User = require('../models/user');
 const Article = require('../models/article');
 const Category = require('../models/category');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
 
 // ADMIN LOGIN
 router.post('/login', async(req, res) => {
@@ -100,6 +101,40 @@ router.put('/update/:slug', isAdmin, async(req, res) => {
       });
     } else {
       res.send('Category Not Found');
+    }
+  }).catch(error => {
+    res.status(401).json({
+      message: 'Error' + error.message
+    });
+  });
+});
+
+// DELETE USER
+router.delete('/delete/:id', isAdmin, async(req, res) => {
+  const user = await User.findById(req.params.id).then(user => {
+    if (user) {
+      const path = './public' + user.profileImg;
+      if (user.profileImg !== '/images/default-user-image.png') {
+        fs.unlink(path, (err) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+        })
+      }
+      User.deleteOne({ _id: user._id }).then(result => {
+        res.status(200).json({
+          message: 'User deleted successfully'
+        })
+      }).catch(error => {
+        res.status(401).json({
+          message: 'Error' + error.message
+        });
+      });
+    } else {
+      res.status(404).json({
+        message: 'User Not Found'
+      });
     }
   }).catch(error => {
     res.status(401).json({
